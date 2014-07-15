@@ -16,6 +16,7 @@ REGISTRATION_PORT = None
 #service values
 PORT = None
 IP = None
+HTTP_SERVICE = None
 
 #database type
 DB_TYPE = None

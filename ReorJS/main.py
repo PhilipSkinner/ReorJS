@@ -1,6 +1,7 @@
 import conf
 import settings
 import api
+import query
 
 def main():
 	config = conf.configure()
@@ -24,9 +25,15 @@ def main():
 	set_setting('MYSQL_HOST',		config.mysql_host)
 	set_setting('MYSQL_USER',		config.mysql_user)
 	set_setting('MYSQL_PASSWORD',		config.mysql_password)
+	set_setting('HTTP_SERVICE',		config.server)
 
 	#we need to configure our API database from settings
 	api.db.connect()
+	
+	#next we need to start our query service
+	service = query.QueryService()
+	service.run()
+	
 
 def set_setting(name, value):
 	setattr(settings, name, value)

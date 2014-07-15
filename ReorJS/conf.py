@@ -19,6 +19,7 @@ def configure():
 	#service details
 	parser.add_argument('--port', default='9999', help='Port to run services on')
 	parser.add_argument('--ip', default=socket.gethostbyname(socket.gethostname()), help='Local IP address (override if required)')
+	parser.add_argument('--server', default='tornado', help='HTTP Server to use')
 
 	#database type for API storage
 	parser.add_argument('--db-type', default='redis', help='Database type for API temporary storage')
