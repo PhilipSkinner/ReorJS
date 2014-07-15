@@ -1,4 +1,4 @@
 ReorJS
 ======
 
-ReorJS Distributed computing platform
+ReorJS Distributed computing platform.
