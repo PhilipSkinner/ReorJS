@@ -23,6 +23,7 @@ def main():
 	set_setting('MONGO_READ',		config.mongo_read)
 	set_setting('MYSQL_NAME',		config.mysql_name)
 	set_setting('MYSQL_HOST',		config.mysql_host)
+	set_setting('MYSQL_PORT',		config.mysql_port)
 	set_setting('MYSQL_USER',		config.mysql_user)
 	set_setting('MYSQL_PASSWORD',		config.mysql_password)
 	set_setting('HTTP_SERVICE',		config.server)

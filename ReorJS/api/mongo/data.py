@@ -6,6 +6,12 @@ import calendar
 
 class Dataset(Document):
   name = StringField()
+  source_type = StringField()
+  source_name = StringField()
+  source_hostname = StringField()
+  source_port = StringField()
+  source_username = StringField()
+  source_password = StringField()
   created = DateTimeField(default=datetime.datetime.utcnow)
 
   def to_object(self):

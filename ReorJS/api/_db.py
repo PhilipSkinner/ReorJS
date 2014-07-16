@@ -10,6 +10,11 @@ class APIDB():
 			print "Configuring for redis"
 		elif settings.DB_TYPE == 'mysql':
 			print "Configuring for mysql"
+			
+			import mysql
+			
+			mysql.Session(username=settings.MYSQL_USER, password=settings.MYSQL_PASSWORD, host=settings.MYSQL_HOST, port=settings.MYSQL_PORT, name=settings.MYSQL_NAME)
+			
 		elif settings.DB_TYPE == 'mongo':
 			print "Configuring for mongo"
 			

@@ -38,6 +38,7 @@ def configure():
 	#mysql settings
 	parser.add_argument('--mysql-name', default='reorjs', help='MySQL database name')
 	parser.add_argument('--mysql-host', default='localhost', help='MySQL hostname')
+	parser.add_argument('--mysql-port', default='3306', help='MySQL port')
 	parser.add_argument('--mysql-user', default='reorjs', help='MySQL username')
 	parser.add_argument('--mysql-password', default='reorjs', help='MySQL password')
 

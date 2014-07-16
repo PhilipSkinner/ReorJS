@@ -35,5 +35,6 @@ MONGO_READ = None
 #mysql settings
 MYSQL_NAME = None
 MYSQL_HOST = None
+MYSQL_PORT = None
 MYSQL_USER = None
 MYSQL_PASSWORD = None
