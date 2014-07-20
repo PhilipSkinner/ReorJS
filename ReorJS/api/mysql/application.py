@@ -6,7 +6,7 @@ from base import Base
 class Application(Base):
   __tablename__ = 'application'
   
-  uid = Column(Integer, primary_key=True)
+  id = Column(Integer, primary_key=True)
   name = Column(String)
   program = Column(String)
   
@@ -15,11 +15,11 @@ class Application(Base):
     self.program = program
   
   def __repr__(self):
-    return "<Application('%s')>" % self.uid
+    return "<Application('%s')>" % self.id
   
   def to_serializable_object(self):
     return {
-      'uid' : self.uid,
+      'id' : self.id,
       'name' : self.name,
       'program' : self.program,
     }

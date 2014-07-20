@@ -6,7 +6,7 @@ from base import Base
 class Stacker(Base):
   __tablename__ = 'stacker'
   
-  uid = Column(Integer, primary_key=True)
+  id = Column(Integer, primary_key=True)
   ip = Column(String)
   port = Column(Integer)
   status = Column(Boolean)
@@ -17,11 +17,11 @@ class Stacker(Base):
     self.status = status
   
   def __repr__(self):
-    return "<Stacker('%s')>" % self.uid
+    return "<Stacker('%s')>" % self.id
   
   def to_serializable_object(self):
     return {
-      'uid' : self.uid,
+      'id' : self.id,
       'ip' : self.ip,
       'port' : self.port,
       'status' : self.status,

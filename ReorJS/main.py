@@ -29,11 +29,12 @@ def main():
 	set_setting('HTTP_SERVICE',		config.server)
 
 	#we need to configure our API database from settings
-	api.db.connect()
-	
-	#next we need to start our query service
-	service = query.QueryService()
-	service.run()
+	if api.db.connect():	
+		#next we need to start our query service
+		service = query.QueryService()
+		service.run()
+	else:
+		print "Error connecting to API database, please check configuration."
 	
 
 def set_setting(name, value):

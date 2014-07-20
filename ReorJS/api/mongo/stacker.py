@@ -3,23 +3,23 @@ from mongoengine import *
 class Stacker(Document):
   ip = StringField()
   port = IntField()
-  status = BooleanField(default=False)  
-  
-  meta = {
-    'ordering' : ['status'],
-    'indexes' : ['status', 'ip', 'port'],
-  }
-  
-  def delete_tasks(self):
-    import data
-    data.TaskData.objects(stacker=self, stacked=True, completed=False).update(
-      set__stacked=False, set__stacker=None)
+  status = BooleanField()
+
+  def __init__(self, ip=None, port=None, status=None):
+    self.ip = ip
+    self.port = port
+    self.status = status
 
   def __repr__(self):
-    return '%s(%s)' % (self.ip, self.port)
-  
+    return "<Stacker('%s')>" str(self.id)
+
   def __unicode__(self):
     return self.__repr__()
-  
-  def __str__(self):
-    return self.__repr__()
+
+  def to_serializable_object(self):
+    return {
+      'id': str(self.id),
+      'ip' : self.ip,
+      'port' : self.port,
+      'status' : self.status,
+    }

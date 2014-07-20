@@ -14,73 +14,65 @@ class Dataset(Document):
   source_password = StringField()
   created = DateTimeField(default=datetime.datetime.utcnow)
 
-  def to_object(self):
+  def __init__(self, name=None, source_type=None, source_name=None, source_hostname=None, source_port=None, source_username=None, source_password=None):
+    self.name = name
+    self.source_type = source_type
+    self.source_name = source_name
+    self.source_hostname = source_hostname
+    self.source_port = source_port
+    self.source_username = source_username
+    self.source_password = source_password
+
+  def __repr__(self):
+    return "<Dataset('%s')>" str(self.id)
+
+  def __unicode__(self):
+    return self.__repr__()
+
+  def to_serializable_object(self):
     return {
       'id': str(self.id),
       'name': self.name,
+      'source_type' : self.source_type,
+      'source_name' : self.source_name,
+      'source_hostname' : self.source_hostname,
+      'source_port' : self.source_port,
+      'source_username' : self.source_username,
+      'source_password' : self.source_password,
       'created': str(self.created),
     }
 
-class DatasetData(Document):
-  customid = StringField()
-  data = StringField()
-  dataset = IntField()
+class DatasetData(Document):  
+  dataset_id = StringField()
+  custom_id = StringField()
+  data = StringField()  
+
+  dataset = ReferenceField('Dataset')
 
   meta = {
     'ordering' : ['dataset'],
     'indexes' : ['dataset'],
   }
 
+  def __init__(self, dataset_id=None, custom_id=None, data=None):
+    self.dataset_id = dataset_id
+    self.custom_id = custom_id
+    self.data = data
+    
+    #now reference the dataset
+    d = Dataset.objects(id = dataset_id).first()
+    self.dataset = d
+
   def __repr__(self):
-    return '%s(%s)' % (self.dataset, self.customid)
+    return 'DatasetData(%s)' % str(self.id)
 
   def __unicode__(self):
     return self.__repr__()
 
-class TaskDataset(Document):
-  task = ReferenceField(Task)
-  dataset = ReferenceField(Dataset)
-
-  meta = {
-    'ordering' : ['task'],
-    'indexes' : ['task'], 
-  }
-
-class TaskData(Document):
-  task = ReferenceField(Task)
-  customid = StringField()
-  data = StringField() #store just as a string so no parsing done locally
-  result = StringField()
-  time = FloatField()
-  completed = BooleanField(default=False)
-  completedOn = DateTimeField()
-  stacked = BooleanField(default=False)
-  stacker = ReferenceField('Stacker')
-  sent = BooleanField(default=False)
-  sentOn = DateTimeField()
-
-  meta = {
-    'ordering' : ['task'],
-    'indexes' : ['task', 'completed', 'stacked',
-      ('task', 'completed'),
-      ('task', 'completed', 'stacked',),
-      ('sent', 'completed', 'sentOn')],
-  }
-
-  def __repr__(self):
-    return '%s(%s)' % (self.task, self.id)
-
-  def __unicode__(self):
-    return self.__repr__()
-
-  def __str__(self):
-    return self.__repr__()
-
-  def to_result_object(self):
+  def to_serializable_object(self):
     return {
-      'customid': self.customid,
-      'data': self.data,
-      'result': self.result,
-      'time': self.time,
-      'completedOn': calendar.timegm(self.completedOn.timetuple())
+      'id' : str(self.id),
+      'dataset' : self.dataset_id,
+      'custom_id' : self.custom_id,
+      'data' : self.data,
     }
