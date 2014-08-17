@@ -5,9 +5,6 @@ def configure():
 	parser = argparse.ArgumentParser(description="ReorJS service daemon", fromfile_prefix_chars='@')
 	parser.convert_arg_line_to_args = convert_arg_line_to_args
 
-	#config file
-	parser.add_argument('--config', default=None, help='Configuration file - see config format in docs')
-	
 	#debug settings
 	parser.add_argument('--verbose', default=False, help='Verbose output enabled')
 	parser.add_argument('--debug', default=False, help='Debug mode enabled')
@@ -42,6 +39,9 @@ def configure():
 	parser.add_argument('--mysql-user', default='reorjs', help='MySQL username')
 	parser.add_argument('--mysql-password', default='reorjs', help='MySQL password')
 
+	#config file
+	parser.add_argument('--config', default=None, help='Configuration file - see config format in docs')
+	
 	args = parser.parse_args()
 	
 	#do we have a conf file?

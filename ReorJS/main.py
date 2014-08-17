@@ -27,9 +27,11 @@ def main():
 	set_setting('MYSQL_USER',		config.mysql_user)
 	set_setting('MYSQL_PASSWORD',		config.mysql_password)
 	set_setting('HTTP_SERVICE',		config.server)
-
+	
+	print settings.MYSQL_NAME
+	
 	#we need to configure our API database from settings
-	if api.db.connect():	
+	if api.connect():	
 		#next we need to start our query service
 		service = query.QueryService()
 		service.run()

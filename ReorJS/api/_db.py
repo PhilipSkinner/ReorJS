@@ -1,22 +1,91 @@
 import settings
+from objects.application import Application
+from objects.data import Dataset
+from objects.data import DatasetData
+from objects.stacker import Stacker
+from objects.task import Task
 
 class APIDB():
+	Application 	= None
+	Dataset 	= None
+	DatasetData 	= None
+	Stacker 	= None
+	Task 		= None
+
 	def __init__(self):
 		#just setup our values for later		
-		self.connection = None
+		self._connection = None
+		self._dbconnection = None
 		self.type = None
+		
+		#and connect
+		if not self.connect():
+			print "Could not connect to API datasource"
+			return None
+
+		#object accessors
+		self.Application 	= Application(parent=self, init=True)
+		self.Dataset 		= Dataset(parent=self, init=True)
+		self.DatasetData 	= DatasetData(parent=self, init=True)
+		self.Stacker 		= Stacker(parent=self, init=True)
+		self.Task		= Task(parent=self, init=True)		
+
+	def connection(self):
+		if self._connection == None:
+			self.connect()
+			
+		return self._connection
+		
+	def dbconnection(self):
+		if self._dbconnection == None:
+			self.dbconnect()
+		else:
+			s = '%s' % self._dbconnection
+			try:
+				i = s.index('closed')
+				if i != None:
+					self.dbconnect()
+			except:
+				pass
+			
+		return self._dbconnection
 	
+	def dbconnect(self):
+		if settings.DB_TYPE == 'redis':
+			print "Connecting to redis"
+		elif settings.DB_TYPE == 'mysql':
+			print "Connecting to mysql"
+			
+			try:
+				import MySQLdb as mdb
+				
+				self._dbconnection = mdb.connect(settings.MYSQL_HOST, settings.MYSQL_USER, settings.MYSQL_PASSWORD, settings.MYSQL_NAME)
+			except:
+				pass
+		elif settings.DB_TYPE == 'mongo':
+			print "Connecting to mongo"
+			
+			try:
+				import pymongo
+			
+				self._dbconnection = pymongo.MongoClient(settings.MONGO_HOST, int(settings.MONGO_PORT))
+			except:
+				pass
+		
+		
 	def connect(self):
+		print "Attempting API datasource (%s) connection..." % settings.DB_TYPE
+	
 		self.type = settings.DB_TYPE
 		if settings.DB_TYPE == 'redis':
 			print "Configuring for redis"
 		elif settings.DB_TYPE == 'mysql':
 			print "Configuring for mysql"
-			
+
 			try:
-				import mysql								
-			
-				mysql.Session(username=settings.MYSQL_USER, password=settings.MYSQL_PASSWORD, host=settings.MYSQL_HOST, port=settings.MYSQL_PORT, name=settings.MYSQL_NAME)
+				import connection.mysql as mysql
+				
+				self._connection = mysql.Connection(self.dbconnection)
 			except:
 				return False
 			
@@ -24,33 +93,10 @@ class APIDB():
 			print "Configuring for mongo"
 			
 			try:
-				import mongo
-				import pymongo
-				import pymongo.collection
+				import connection.mongo as mongo
 			
-				mongo.connection = mongo.connect(settings.MONGO_NAME, host=settings.MONGO_HOST, port=int(settings.MONGO_PORT), read_preference=settings.MONGO_READ)
-				mongo.rawConnection = pymongo.MongoClient(settings.MONGO_HOST, int(settings.MONGO_PORT))
+				self._connection = mongo.Connection(self.dbconnection)
 			except:
 				return False
 		
 		return True
-			
-
-	def query(self, type, args=None):
-		if self.type == 'redis':
-			print "Running query on redis"
-		elif self.type == 'mysql':
-			print "Running query on mysql"
-			try:
-				import mysql
-				
-				filters = []
-				if args != None:
-					for k, v in args.iter_items():
-						filters.append('%s == %s' % (k, v))	
-				
-				result = mysql.session.query(type).filter(filters)
-			except:
-				return None
-		elif self.type == 'mongo':
-			print "Running query on mongo"
