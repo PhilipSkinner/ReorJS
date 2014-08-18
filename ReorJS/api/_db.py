@@ -29,6 +29,18 @@ class APIDB():
 		self.DatasetData 	= DatasetData(parent=self, init=True)
 		self.Stacker 		= Stacker(parent=self, init=True)
 		self.Task		= Task(parent=self, init=True)		
+		
+		#some tests
+		temp = self.Application.create({ 'name' : 'hello', 'program' : 'world' })
+		temp.update()
+		
+		object = self.Application.find({ 'id' : '53f23872e138230aa709ba8b' })
+		
+		print object.name.value()
+		
+		object.name.value('cheese')
+		
+		object.update()
 
 	def connection(self):
 		if self._connection == None:
@@ -91,12 +103,13 @@ class APIDB():
 			
 		elif settings.DB_TYPE == 'mongo':
 			print "Configuring for mongo"
-			
-			try:
+
+			if 1==1:			
+#			try:
 				import connection.mongo as mongo
 			
 				self._connection = mongo.Connection(self.dbconnection)
-			except:
-				return False
+#			except:
+#				return False
 		
 		return True

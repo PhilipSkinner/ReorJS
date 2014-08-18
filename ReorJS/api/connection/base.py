@@ -31,6 +31,11 @@ class ColumnBase():
     if self.null and self.primary_key:
       print "Column cannot be null and be primary key, fixing"
       self.null = False
+      
+    self.afterInit()
+  
+  def afterInit(self):
+    return self
 
   def __set__(self):
     print "__set__ method requires overriding"
