@@ -12,8 +12,11 @@ class QueryTornado(BaseQueryService):
 		
 		urls = [
 			(r'/api/v1/dataset/(.*)/data', tornadoHandlers.APIDataSetHandler),
+			(r'/api/v1/dataset', tornadoHandlers.APIDataSetHandler),
 			(r'/api/v1/dataset/?(.*)', tornadoHandlers.APIDataSetHandler),
+			(r'/api/v1/task', tornadoHandlers.APITaskHandler),
 			(r'/api/v1/task/?(.*)', tornadoHandlers.APITaskHandler),
+			(r'/api/v1/application', tornadoHandlers.APIApplicationHandler),
 			(r'/api/v1/application/?(.*)', tornadoHandlers.APIApplicationHandler),
 		]
 		
@@ -35,10 +38,10 @@ def TornadoApp(handlers=None):
                         def __init__(self, handlers):
                                 super(TornadoAppObject, self).__init__(handlers)                
 				
-                		self.DataSetDataHandler = _handlers.APIDataSetDataHandler()
-                                self.DataSetHandler = _handlers.APIDataSetHandler()
-                                self.TaskHandler = _handlers.APITaskHandler()
-                                self.ApplicationHandler = _handlers.APIApplicationHandler()                
+                		self.DataSetDataHandler = _handlers.APIDataSetDataHandler(self)
+                                self.DataSetHandler = _handlers.APIDataSetHandler(self)
+                                self.TaskHandler = _handlers.APITaskHandler(self)
+                                self.ApplicationHandler = _handlers.APIApplicationHandler(self)
 
 		_app = TornadoAppObject(handlers)
 	

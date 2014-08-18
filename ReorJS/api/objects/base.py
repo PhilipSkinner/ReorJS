@@ -4,6 +4,8 @@ class ObjectBase():
   __tablename__ = None
 
   def __init__(self, parent=None, init=False):
+    self.__attributes__ = False
+  
     if parent == None:
       print "Error attempting object passthrough instantiation, no parent object given."
 
@@ -24,6 +26,11 @@ class ObjectBase():
     
   def _checkParams(self, params):
     #check params
+
+    #make sure our attributes are good
+    if not self.__attributes__:
+      self.__initattributes__()
+    
     if not type(params) is dict:
       print "Parameters passed must be of type dict, not %s" % type(params)
       return False

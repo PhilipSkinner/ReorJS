@@ -7,13 +7,15 @@ class Application(ObjectBase):
     self.id 		= self.Column('id', int, primary_key=True)
     self.name		= self.Column('name', str)
     self.program 	= self.Column('program', str)
+    
+    self.__attributes__ = True
   
-  def __repr__(self):
-    return "<Application('%s')>" % self.id
+  def __repr__(self):    
+    return "<Application>"
   
   def to_serializable_object(self):
     return {
-      'id' 		: self.id,
-      'name' 		: self.name,
-      'program' 	: self.program,
+      'id' 		: str(self.id.value()),
+      'name' 		: self.name.value(),
+      'program' 	: self.program.value(),
     }

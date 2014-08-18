@@ -31,16 +31,16 @@ class APIDB():
 		self.Task		= Task(parent=self, init=True)		
 		
 		#some tests
-		temp = self.Application.create({ 'name' : 'hello', 'program' : 'world' })
-		temp.update()
+#		temp = self.Application.create({ 'name' : 'hello', 'program' : 'world' })
+#		temp.update()
 		
-		object = self.Application.find({ 'id' : '53f23872e138230aa709ba8b' })
+#		object = self.Application.find({ 'id' : '53f23872e138230aa709ba8b' })
 		
-		print object.name.value()
+#		print object.name.value()
 		
-		object.name.value('cheese')
+#		object.name.value('cheese')
 		
-		object.update()
+#		object.update()
 
 	def connection(self):
 		if self._connection == None:

@@ -58,18 +58,18 @@ class Connection(ConnectionBase):
         if value.primary_key:
           pk = value
         
-    collection = self.db[object.__tablename__]    
+    collection = self.db[object.__tablename__]
     results = collection.find(params)
     
     toReturn = []    
     for result in results:
       #now create a copy of ourself with these values
-      obj = copy.copy(object)
+      obj = copy.deepcopy(object)
       
       for column, value in result.iteritems():      
         if column == '_id':        
           column = pk.oldname
-          
+
         col = getattr(obj, column)
         col.__value__(value)
       
@@ -95,8 +95,10 @@ class Connection(ConnectionBase):
       collection = self.db[object.__tablename__]
       
       if pk.value() == None:
+        print "creating"
         collection.insert(doc)
       else:
+        print "updating"
         collection.update({ pk.name : ObjectId(pk.value()) }, { '$set' : doc }, upsert=True, multi=False)      
 
   def delete(self, object):    
