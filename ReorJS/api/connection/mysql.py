@@ -111,8 +111,6 @@ class Connection(ConnectionBase):
     if 'limit' in options:
       query += ' LIMIT %s ' % options['limit']
       
-    print query
-    
     cursor = self.connection().cursor()
     cursor.execute(query)
     
@@ -162,8 +160,6 @@ class Connection(ConnectionBase):
       else:    
         query += '%s WHERE %s = %s' % (','.join(set), pk.name, pk.value())
         
-        print query
-  
         cursor = self.connection().cursor()
         cursor.execute(query)
         self.connection().commit()

@@ -1,5 +1,54 @@
 from base import *
+import api
 
 class APITaskHandler(BaseHandler):
-  pass
+  def get(self, id=None):
+    if id == None:
+      tasks = api.Task.search({})
+      
+      self.payload([t.to_serializable_object() for t in tasks])
+      return
+    else:
+      task = api.Task.find({ 'id' : id })
+      
+      if task == None:
+        self.error('3001', 'Task %s not found' % id)
+        return
+      
+      self.payload(task.to_serializable_object())
+      return
+  
+  def post(self, id=None):
+    application = self.get_argument('application', None)
+    dataset = self.get_argument('dataset', None)
+    
+    if application == None:
+      self.error('3002', 'Application ID required')
+      return
+      
+    if dataset == None:
+      self.error('3003', 'Dataset ID required')
+      return
+
+    app = api.Application.find({ 'id' : application })
+    
+    if app == None:
+      self.error('3004', 'No such application %s' % application)
+      return
+      
+    data = api.Dataset.find({ 'id' : dataset })
+    
+    if data == None:
+      self.error('3005', 'No such dataset %s' % dataset)
+      return    
+    
+    if id == None:
+      task = api.Task.create({ 'application' : application, 'dataset' : dataset, 'program' : app.program.value() })
+      task.update()
+      
+      self.status('200', 'Task created')
+      return
+    else:
+      self.error('3010', 'Task manipulation not yet supported')
+      return
   
