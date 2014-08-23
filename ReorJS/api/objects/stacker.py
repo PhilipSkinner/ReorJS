@@ -14,8 +14,8 @@ class Stacker(ObjectBase):
   
   def to_serializable_object(self):
     return {
-      'id' 		: self.id,
-      'ip' 		: self.ip,
-      'port' 		: self.port,
-      'status' 		: self.status,
+      'id' 		: str(self.id.value()),
+      'ip' 		: self.ip.value(),
+      'port' 		: self.port.value(),
+      'status' 		: self.status.value(),
     }

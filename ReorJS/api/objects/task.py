@@ -17,11 +17,11 @@ class Task(ObjectBase):
   
   def to_serializable_object(self):
     return {
-      'id' 		: self.id,
-      'task' 		: self.task,
-      'owner' 		: self.owner,
-      'dataset' 	: self.dataset_id,
-      'result' 		: self.result_id,
-      'application' 	: self.application_id,
-      'program' 	: self.program,
+      'id' 		: str(self.id.value()),
+      'task' 		: self.task.value(),
+      'owner' 		: self.owner.value(),
+      'dataset' 	: self.dataset_id.value(),
+      'result' 		: self.result_id.value(),
+      'application' 	: self.application_id.value(),
+      'program' 	: self.program.value(),
     }

@@ -6,7 +6,6 @@ _app = None
 
 class QueryTornado(BaseQueryService):
 	def __init__(self, output=None):
-		print "Setting up Tornado"
 		import tornado.httpserver
 		import tornadoHandlers
 		
@@ -22,11 +21,11 @@ class QueryTornado(BaseQueryService):
 		
 		if output != None:
 		        self.output = output
-		        urls.append((r'/output/v1/task', tornadoHandlers.GetTask))
-		        urls.append((r'/output/v1/ping', tornadoHandlers.Ping))
-		        urls.append((r'/output/v1/status', tornadoHandlers.Status))
+        	        urls.append((r'/output/v1/task', tornadoHandlers.GetTask))
+	                urls.append((r'/output/v1/ping', tornadoHandlers.Ping))
+	                urls.append((r'/output/v1/status', tornadoHandlers.Status))
 		
-		self.application = TornadoApp(urls)
+		self.application = TornadoApp(urls, output)
 		self.server = tornado.httpserver
 		self.application.listen(settings.PORT)
 
@@ -35,20 +34,22 @@ class QueryTornado(BaseQueryService):
 		import tornado.ioloop		
 		tornado.ioloop.IOLoop.instance().start()
 
-def TornadoApp(handlers=None):
+def TornadoApp(handlers=None, output=None):
 	global _app
 	if not _app:
 		import tornado.web
 
                 class TornadoAppObject(tornado.web.Application):
-                        def __init__(self, handlers):
+                        def __init__(self, handlers, output):
                                 super(TornadoAppObject, self).__init__(handlers)                
 				
                 		self.DataSetDataHandler = _handlers.APIDataSetDataHandler(self)
                                 self.DataSetHandler = _handlers.APIDataSetHandler(self)
                                 self.TaskHandler = _handlers.APITaskHandler(self)
-                                self.ApplicationHandler = _handlers.APIApplicationHandler(self)
-
-		_app = TornadoAppObject(handlers)
+                                self.ApplicationHandler = _handlers.APIApplicationHandler(self)                                                                
+                                
+                                self.output = output
+                                
+		_app = TornadoAppObject(handlers, output)
 	
 	return _app

@@ -2,6 +2,7 @@ import collections
 import api
 import random
 import operator
+import simplejson as json
 
 SEQUENTIAL = 1
 RANDOM = 2
@@ -10,7 +11,10 @@ SHARED = 3
 stacker = None
 
 def initStacker():
+    global stacker
     stacker = StackManager(4096, method=RANDOM)
+    
+    print stacker
     
     return True
 
@@ -32,12 +36,12 @@ class StackManager(object):
       
       self.refreshTasks()
       self.refreshDatasets()
-    
+          
     def refreshDatasets(self):
       #get the datasets for the tasks we have, quickgen an id list
       ids = []
       for i,t in self._tasks.iteritems():
-        ids.append(t.dataset_id.value())
+        ids.append(str(t.dataset_id.value()))
       
       for i in ids:
         if i in self._datasets:
@@ -45,9 +49,9 @@ class StackManager(object):
           del self._datasets[i]
         else:
           #fetch ones we don't have
-          dataset = api.Dataset.find({ 'id' : i })
+          dataset = api.db.Dataset.find({ 'id' : i })
           if dataset != None:
-            self._datasets[dataset.id.value()] = dataset
+            self._datasets[str(dataset.id.value())] = dataset
     
     def refreshTasks(self):
       #check our existing tasks still exist
@@ -102,7 +106,7 @@ class StackManager(object):
             break
         elif self.method == RANDOM:
           #grab a random one
-          toRead = random.choice(self._tasks.values())
+          toRead.append(random.choice(self._tasks.values()))
         elif self.method == SHARED:
           #check each one in the list and compare it to its read value
           m = max(self._readfrom, key=lambda x: self._readyfrom[x[0]])          
@@ -117,7 +121,10 @@ class StackManager(object):
               else:
                 #never used before, use it!
                 toRead.append(t)
-        
+
+        if len(toRead) == 0:
+          return None        
+          
         #foreach task, read in some data
         for task in toRead:
           dataset = self._datasets[task.dataset_id.value()]
@@ -195,7 +202,7 @@ class StackManager(object):
             data = self._connections[dataset.id.value()].fetch_data(rows=10)
             
             for d in data:
-              self.add_task(json.dumps({ 'script' : task.program.value(), 'data' : d })) 
+              self.add_task({ 'script' : task.program.value(), 'data' : d }) 
 
       try:
         return self.stack.popleft()

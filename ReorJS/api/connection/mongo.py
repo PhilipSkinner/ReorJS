@@ -65,13 +65,12 @@ class Connection(ConnectionBase):
     for result in results:
       #now create a copy of ourself with these values
       obj = copy.deepcopy(object)
-      
-      for column, value in result.iteritems():      
-        if column == '_id':        
-          column = pk.oldname
 
-        col = getattr(obj, column)
-        col.__value__(value)
+      for column, value in result.iteritems():              
+        for attribute, v in obj.__dict__.items():
+          if isinstance(v, Column):
+            if v.name == column:
+              v.__value__(value)
       
       toReturn.append(obj)
 
@@ -92,6 +91,9 @@ class Connection(ConnectionBase):
     if pk == None:
       print "Issue calling update, no primary key given. Defaulting to insert only for %s" % object
     else:    
+      if self.db == None:
+        self.db = self.connection().reorjs
+        
       collection = self.db[object.__tablename__]
       
       if pk.value() == None:

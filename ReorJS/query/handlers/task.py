@@ -4,12 +4,12 @@ import api
 class APITaskHandler(BaseHandler):
   def get(self, id=None):
     if id == None:
-      tasks = api.Task.search({})
+      tasks = api.db.Task.search({})
       
       self.payload([t.to_serializable_object() for t in tasks])
       return
     else:
-      task = api.Task.find({ 'id' : id })
+      task = api.db.Task.find({ 'id' : id })
       
       if task == None:
         self.error('3001', 'Task %s not found' % id)
@@ -30,20 +30,20 @@ class APITaskHandler(BaseHandler):
       self.error('3003', 'Dataset ID required')
       return
 
-    app = api.Application.find({ 'id' : application })
+    app = api.db.Application.find({ 'id' : application })
     
     if app == None:
       self.error('3004', 'No such application %s' % application)
       return
       
-    data = api.Dataset.find({ 'id' : dataset })
+    data = api.db.Dataset.find({ 'id' : dataset })
     
     if data == None:
       self.error('3005', 'No such dataset %s' % dataset)
       return    
     
     if id == None:
-      task = api.Task.create({ 'application' : application, 'dataset' : dataset, 'program' : app.program.value() })
+      task = api.db.Task.create({ 'application_id' : application, 'dataset_id' : dataset, 'program' : app.program.value() })
       task.update()
       
       self.status('200', 'Task created')

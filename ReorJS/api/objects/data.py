@@ -20,16 +20,16 @@ class Dataset(ObjectBase):
     
   def to_serializable_object(self):
     return {
-      'id' 		: self.id,
-      'name' 		: self.name,
-      'source_type' 	: self.source_type,
-      'source_name' 	: self.source_name,
-      'source_hostname' : self.source_hostname,
-      'source_port' 	: self.source_port,
-      'source_username' : self.source_username,
-      'source_password' : self.source_password,
+      'id' 		: str(self.id.value()),
+      'name' 		: self.name.value(),
+      'source_type' 	: self.source_type.value(),
+      'source_name' 	: self.source_name.value(),
+      'source_hostname' : self.source_hostname.value(),
+      'source_port' 	: self.source_port.value(),
+      'source_username' : self.source_username.value(),
+      'source_password' : self.source_password.value(),
       'source_table'	: self.source_table.value(),
-      'created' 	: str(self.created),
+      'created' 	: str(self.created.value()),
     }
 
 class DatasetData(ObjectBase):
@@ -46,9 +46,9 @@ class DatasetData(ObjectBase):
 
   def to_serializable_object(self):
     return {
-      'id' 		: self.id,
-      'dataset' 	: self.dataset_id,
-      'custom_id' 	: self.custom_id,
-      'data' 		: self.data,
+      'id' 		: str(self.id.value()),
+      'dataset' 	: self.dataset_id.value(),
+      'custom_id' 	: self.custom_id.value(),
+      'data' 		: self.data.value(),
     }
   

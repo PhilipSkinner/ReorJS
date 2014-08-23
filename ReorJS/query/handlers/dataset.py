@@ -19,14 +19,26 @@ class APIDataSetHandler(BaseHandler):
       return
   
   def post(self, id=None):
-    name = self.get_argument('name', None)
+    name 		= self.get_argument('name', None)
+    source_type 	= self.get_argument('source_type', None)
+    source_name 	= self.get_argument('source_name', None)
+    source_hostname 	= self.get_argument('source_hostname', None)
+    source_username 	= self.get_argument('source_username', None)
+    source_port 	= self.get_argument('source_port', None)
+    source_table 	= self.get_argument('source_table', None)
     
     if name == None or name.replace(' ', '') == '':
       self.error('2002', 'Dataset requires a name')
       return
     
     if id == None:
-      dataset = api.db.Dataset.create({ 'name' : name })
+      dataset = api.db.Dataset.create({ 'name' 			: name, 
+                                        'source_type' 		: source_type, 
+                                        'source_name' 		: source_name, 
+                                        'source_hostname' 	: source_hostname, 
+                                        'source_username' 	: source_username, 
+                                        'source_port' 		: source_port, 
+                                        'source_table' 		: source_table })
       dataset.update()
       
       self.status('200', 'Dataset successfully created')
@@ -35,10 +47,16 @@ class APIDataSetHandler(BaseHandler):
       dataset = api.db.Dataset.find({ 'id' : id })
       
       if dataset == None:
-        self.error('2001', 'Dataset %d not found' % id)
+        self.error('2001', 'Dataset %s not found' % id)
         return
       
       dataset.name.value(name)
+      dataset.source_type.value(source_type)
+      dataset.source_name.value(source_name)
+      dataset.source_hostname.value(source_hostname)
+      dataset.source_username.value(source_username)
+      dataset.source_port.value(source_port)
+      dataset.source_table.value(source_table)
       dataset.update()
       
       self.status('200', 'Dataset %s updated successfully' % id)
