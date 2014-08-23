@@ -5,7 +5,7 @@ import handlers as _handlers
 _app = None
 
 class QueryTornado(BaseQueryService):
-	def __init__(self):
+	def __init__(self, output=None):
 		print "Setting up Tornado"
 		import tornado.httpserver
 		import tornadoHandlers
@@ -19,6 +19,12 @@ class QueryTornado(BaseQueryService):
 			(r'/api/v1/application', tornadoHandlers.APIApplicationHandler),
 			(r'/api/v1/application/?(.*)', tornadoHandlers.APIApplicationHandler),
 		]
+		
+		if output != None:
+		        self.output = output
+		        urls.append((r'/output/v1/task', tornadoHandlers.GetTask))
+		        urls.append((r'/output/v1/ping', tornadoHandlers.Ping))
+		        urls.append((r'/output/v1/status', tornadoHandlers.Status))
 		
 		self.application = TornadoApp(urls)
 		self.server = tornado.httpserver

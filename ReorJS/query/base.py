@@ -1,5 +1,5 @@
 class BaseQueryService():
-  def __init__(self):
+  def __init__(self, output=None):
     print "Initialization needs to be overridden"
     
   def start(self):

@@ -2,6 +2,9 @@ import conf
 import settings
 import api
 import query
+import stack
+import output
+import input
 
 def main():
 	config = conf.configure()
@@ -32,9 +35,12 @@ def main():
 	
 	#we need to configure our API database from settings
 	if api.connect():	
+		#and then our stacker
+		stack.initStacker()
+		
 		#next we need to start our query service
 		service = query.QueryService()
-		service.run()
+		service.run()		
 	else:
 		print "Error connecting to API database, please check configuration."
 	
