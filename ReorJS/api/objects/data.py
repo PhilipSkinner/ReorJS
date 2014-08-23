@@ -12,6 +12,7 @@ class Dataset(ObjectBase):
     self.source_port 		= self.Column('source_port', str)
     self.source_username 	= self.Column('source_username', str)
     self.source_password 	= self.Column('source_password', str)
+    self.source_table		= self.Column('source_table', str)
     self.created 		= self.Column('created', str)
 
   def __repr__(self):
@@ -27,6 +28,7 @@ class Dataset(ObjectBase):
       'source_port' 	: self.source_port,
       'source_username' : self.source_username,
       'source_password' : self.source_password,
+      'source_table'	: self.source_table.value(),
       'created' 	: str(self.created),
     }
 

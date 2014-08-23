@@ -40,7 +40,7 @@ def configure():
 	parser.add_argument('--mysql-password', default='reorjs', help='MySQL password')
 
 	#config file
-	parser.add_argument('--config', default=None, help='Configuration file - see config format in docs')
+	parser.add_argument('--config', default='/etc/reorjs/reorjsd.conf', help='Configuration file - see config format in docs')
 	
 	args = parser.parse_args()
 	

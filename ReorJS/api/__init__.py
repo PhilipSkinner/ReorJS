@@ -6,7 +6,4 @@ def connect():
   global db
   db = APIDB()
   
-  if db == None:
-    return False
-  
-  return True
+  return db.ready

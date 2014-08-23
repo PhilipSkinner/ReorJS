@@ -17,6 +17,7 @@ class APIDB():
 		self._connection = None
 		self._dbconnection = None
 		self.type = None
+		self.ready = False
 		
 		#and connect
 		if not self.connect():
@@ -30,18 +31,8 @@ class APIDB():
 		self.Stacker 		= Stacker(parent=self, init=True)
 		self.Task		= Task(parent=self, init=True)		
 		
-		#some tests
-#		temp = self.Application.create({ 'name' : 'hello', 'program' : 'world' })
-#		temp.update()
+		self.ready = True
 		
-#		object = self.Application.find({ 'id' : '53f23872e138230aa709ba8b' })
-		
-#		print object.name.value()
-		
-#		object.name.value('cheese')
-		
-#		object.update()
-
 	def connection(self):
 		if self._connection == None:
 			self.connect()
@@ -104,12 +95,11 @@ class APIDB():
 		elif settings.DB_TYPE == 'mongo':
 			print "Configuring for mongo"
 
-			if 1==1:			
-#			try:
+			try:
 				import connection.mongo as mongo
 			
 				self._connection = mongo.Connection(self.dbconnection)
-#			except:
-#				return False
+			except:
+				return False
 		
-		return True
+		return self._connection != None
