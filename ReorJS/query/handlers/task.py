@@ -32,11 +32,15 @@ class APITaskHandler(BaseHandler):
 
     app = api.db.Application.find({ 'id' : application })
     
+    print app
+    
     if app == None:
       self.error('3004', 'No such application %s' % application)
       return
       
     data = api.db.Dataset.find({ 'id' : dataset })
+    
+    print data
     
     if data == None:
       self.error('3005', 'No such dataset %s' % dataset)

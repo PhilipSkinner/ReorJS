@@ -36,7 +36,10 @@ class Connection(ConnectionBase):
     new = {}
     for key, value in params.iteritems():
       if replace == key:
-        new['_id'] = ObjectId(params[key])
+        try:
+          new['_id'] = ObjectId(params[key])
+        except:
+          new['_id'] = params[key]
       else:
         new[key] = params[key]
         
@@ -57,12 +60,12 @@ class Connection(ConnectionBase):
       if isinstance(value, Column):
         if value.primary_key:
           pk = value
-        
+            
     collection = self.db[object.__tablename__]
     results = collection.find(params)
     
     toReturn = []    
-    for result in results:
+    for result in results:    
       #now create a copy of ourself with these values
       obj = copy.deepcopy(object)
 
@@ -114,6 +117,9 @@ class Connection(ConnectionBase):
     if pk == None:
       print "Issue calling delete, no primary key given. Object will not be deleted"
       return False
+
+    if self.db == None:
+      self.db = self.connection().reorjs
 
     collection = self.db[object.__tablename__]
     collection.remove({ pk.name : ObjectId(pk.value()) })    

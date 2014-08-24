@@ -157,7 +157,7 @@ class ReorJSCLI(cmd.Cmd):
         details.append(None)
                 
       name 		= details[1]
-      source_type 	= str(details[2]).lowercase
+      source_type 	= str(details[2]).lower()
       source_hostname 	= details[3]
       source_port 	= details[4]
       source_name 	= details[5]
@@ -202,7 +202,8 @@ class ReorJSCLI(cmd.Cmd):
       if source_type not in ['mysql', 'redis', 'mongo', 'hadoop', 'memcached', 'local']:
         return self.help_dataset(task=details[0], specific='type', name=source_type)
       
-      status = self.api.modifyDataset(name		= name,
+      status = self.api.modifyDataset(id		= id,
+                                      name		= name,
                                       source_type	= source_type,
                                       source_hostname	= source_hostname,
                                       source_port	= source_port,
@@ -315,7 +316,7 @@ class ReorJSCLI(cmd.Cmd):
       if len(details) < 2:
         return self.help_application(task=details[0])
       
-      status = self.api.deleteApplication(id=details[0])
+      status = self.api.deleteApplication(id=details[1])
       self.doStatus(status)
       return
     elif details[0] == 'help' and len(details) == 2:
@@ -393,7 +394,28 @@ class ReorJSCLI(cmd.Cmd):
     print table    
     
   def doStatus(self, status):
-    print status
+    code = '9999'
+    
+    if status != None:
+      if 'code' in status:
+        code = status['code']      
+      
+      if 'meta' in status:
+        if 'code' in status['meta']:
+          code = status['meta']['code']
+  
+      if 'error' in status:
+        if 'message' in status['error']:
+          self.error('%s : %s' % (code, status['error']['message']))
+          return
+      
+      if 'status' in status:
+        if 'message' in status['status']:
+          self.good('%s : %s' % (code, status['status']['message']))
+          return
+    
+    self.error('%s : An unknown error occured' % code)
+    return
   
   def normal(self, line):
     print line

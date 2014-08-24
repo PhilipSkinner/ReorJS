@@ -78,7 +78,7 @@ class APIDataSetHandler(BaseHandler):
     
     dataset.delete()
     
-    self.status('200', 'Dataset %d deleted successfully' % id)
+    self.status('200', 'Dataset %s deleted successfully' % id)
     return
 
 class APIDataSetDataHandler(BaseHandler):
