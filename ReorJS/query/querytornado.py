@@ -5,7 +5,7 @@ import handlers as _handlers
 _app = None
 
 class QueryTornado(BaseQueryService):
-	def __init__(self, output=None):
+	def __init__(self, output=None, input=None):
 		import tornado.httpserver
 		import tornadoHandlers
 		
@@ -24,8 +24,12 @@ class QueryTornado(BaseQueryService):
         	        urls.append((r'/output/v1/task', tornadoHandlers.GetTask))
 	                urls.append((r'/output/v1/ping', tornadoHandlers.Ping))
 	                urls.append((r'/output/v1/status', tornadoHandlers.Status))
+                
+                if input != None:
+                        self.input = input
+                        urls.append((r'/input/v1/result', tornadoHandlers.ReceiveResult))        
 		
-		self.application = TornadoApp(urls, output)
+		self.application = TornadoApp(urls, output, input)
 		self.server = tornado.httpserver
 		self.application.listen(settings.PORT)
 
@@ -34,13 +38,13 @@ class QueryTornado(BaseQueryService):
 		import tornado.ioloop		
 		tornado.ioloop.IOLoop.instance().start()
 
-def TornadoApp(handlers=None, output=None):
+def TornadoApp(handlers=None, output=None, input=None):
 	global _app
 	if not _app:
 		import tornado.web
 
                 class TornadoAppObject(tornado.web.Application):
-                        def __init__(self, handlers, output):
+                        def __init__(self, handlers, output, input):
                                 super(TornadoAppObject, self).__init__(handlers)                
 				
                 		self.DataSetDataHandler = _handlers.APIDataSetDataHandler(self)
@@ -49,7 +53,8 @@ def TornadoApp(handlers=None, output=None):
                                 self.ApplicationHandler = _handlers.APIApplicationHandler(self)                                                                
                                 
                                 self.output = output
+                                self.input = input
                                 
-		_app = TornadoAppObject(handlers, output)
+		_app = TornadoAppObject(handlers, output, input)
 	
 	return _app
