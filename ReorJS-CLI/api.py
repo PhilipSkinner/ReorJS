@@ -26,6 +26,7 @@
 	Copyright (c) 2014, Crowdcalc B.V.
 """
 
+import urllib
 import urllib2
 import httplib2
 import simplejson as json
@@ -84,8 +85,13 @@ class API():
 	def createTask(self, application=None, dataset=None, result=None):
 		try:
 			connection = httplib2.Http()		       
-			url = self.host + '/api/v1/task'                       
-                        response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body='application=%s&dataset=%s&result=%s' % (application, dataset, result))
+			url = self.host + '/api/v1/task'                      
+			body = urllib.urlencode({
+				'application' : application,
+				'dataset' : dataset,
+				'result' : result,
+			}) 
+                        response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
                                 
                         if response.status == 200:
                               	data = json.loads(content)
@@ -115,14 +121,16 @@ class API():
 			connection = httplib2.Http()		       
 			url = self.host + '/api/v1/dataset'                       
 			
-			body = 'name=%s' 		% name
-			body += '&source_type=%s' 	% source_type
-			body += '&source_hostname=%s' 	% source_hostname
-			body += '&source_port=%s' 	% source_port
-			body += '&source_name=%s' 	% source_name
-			body += '&source_table=%s' 	% source_table
-			body += '&source_username=%s' 	% source_username
-			body += '&source_password=%s' 	% source_password
+			body = urllib.urlencode({
+				'name'			: name,
+				'source_type' 		: source_type,
+				'source_hostname' 	: source_hostname,
+				'source_port' 		: source_port,
+				'source_name' 		: source_name,
+				'source_table' 		: source_table,
+				'source_username' 	: source_username,
+				'source_password' 	: source_password,	
+			})
 			
                         response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
                                 
@@ -139,14 +147,16 @@ class API():
 			connection = httplib2.Http()		       
 			url = self.host + '/api/v1/dataset/%s' % id
 			
-			body = 'name=%s' 		% name
-			body += '&source_type=%s' 	% source_type
-			body += '&source_hostname=%s' 	% source_hostname
-			body += '&source_port=%s' 	% source_port
-			body += '&source_name=%s' 	% source_name
-			body += '&source_table=%s' 	% source_table
-			body += '&source_username=%s' 	% source_username
-			body += '&source_password=%s' 	% source_password
+			body = urllib.urlencode({
+				'name'			: name,
+				'source_type' 		: source_type,
+				'source_hostname' 	: source_hostname,
+				'source_port' 		: source_port,
+				'source_name' 		: source_name,
+				'source_table' 		: source_table,
+				'source_username' 	: source_username,
+				'source_password' 	: source_password,	
+			})
 			
                         response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
                                 
@@ -207,8 +217,10 @@ class API():
 			connection = httplib2.Http()		       
 			url = self.host + '/api/v1/application'                       
 			
-			body = 'name=%s' 	% name
-			body += '&program=%s' 	% program
+			body = urllib.urlencode({
+				'name'		: name,
+				'program'	: program,
+			})
 			
                         response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
                                 
@@ -225,9 +237,11 @@ class API():
 			connection = httplib2.Http()
 			url = self.host + '/api/v1/application/%s' % id
 			
-			body = 'name=%s'	% name
-			body += '&program=%s'	% program
-		
+			body = urllib.urlencode({
+				'name'		: name,
+				'program'	: program,
+			})
+
 			response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
 			
 			if response.status == 200:

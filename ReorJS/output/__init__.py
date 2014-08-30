@@ -13,7 +13,7 @@ class GetTaskHandler(query.handlers.base.BaseHandler):
   def get(self):
     #get a task from the stack
     task = stack.stacker.get_task()
-    
+
     if task != None:
       self.payload(task)
       return

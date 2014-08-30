@@ -43,7 +43,8 @@ class StackManager(object):
       for i in ids:
         if i in self._datasets:
           #remove any that don't exist anymore in our task list
-          del self._datasets[i]
+          #del self._datasets[i]
+          a=1
         else:
           #fetch ones we don't have
           dataset = api.db.Dataset.find({ 'id' : i })

@@ -181,7 +181,7 @@ class Connection(ConnectionBase):
             if value.value() == None:
               values.append('NULL')
             else:
-              values.append('"%s"' % value.value())
+              values.append('"%s"' % value.value().replace('"', '\\"').replace(';', '\\;'))                      
       
         query = "INSERT INTO %s (%s) VALUES (%s)" % (object.__tablename__, ",".join(columns), ",".join(values))
         
@@ -221,7 +221,7 @@ class Connection(ConnectionBase):
     
 class Column(ColumnBase):  
   def __set__(self):
-    query = '%s = "%s"' % (self.name, self.value())
+    query = '%s = "%s"' % (self.name, self.value().replace('"', '\\"'))
     
     return query
 
