@@ -4,6 +4,7 @@ from querytornado import QueryTornado
 from querybasehttpserver import QueryBaseHTTPServer
 
 import output
+import input
 
 class QueryService():
   def __init__(self):
@@ -12,19 +13,20 @@ class QueryService():
     self.base = None
     
     self.output = output.OutputService()
+    self.input = input.InputService()
     
     if settings.HTTP_SERVICE == 'tornado':
       print "Setting up Tornado"
       
-      self.tornado = QueryTornado(output=self.output)
+      self.tornado = QueryTornado(output=self.output, input=self.input)
     elif settings.HTTP_SERVICE == 'fapws':
       print "Setting up fapws"
       
-      self.fapws = QueryFAPWS(output=self.output)      
+      self.fapws = QueryFAPWS(output=self.output, input=self.input)      
     elif settings.HTTP_SERVICE == 'base':
       print "Setting up BaseHTTPServer"
       
-      self.base = QueryBaseHTTPServer(output=self.output)
+      self.base = QueryBaseHTTPServer(output=self.output, input=self.input)
   
   def run(self):
     if self.tornado != None:

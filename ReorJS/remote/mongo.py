@@ -38,16 +38,18 @@ class MongoRemote(base.RemoteConnection):
     
     results = collection.find({}).skip(self.cursor).limit(rows)
     
-    #increase our cursor
-    if results.count() > rows:
-      self.cursor += rows
-    else:
-      self.cursor += results.count()
-    
     toReturn = []
     
     for r in results:
       r['_id'] = str(r['_id'])
-      toReturn.append(r)
+      toReturn.append({ 'data' : r, 'cursor' : self.cursor })
+      self.cursor += 1
 
     return toReturn
+
+  def insert_data(self, data, id):
+    collection = self.db[self.table]   
+     
+    doc = { 'result' : data, 'id' : id }
+    
+    collection.insert(doc)

@@ -109,8 +109,9 @@ class ReorJSCLI(cmd.Cmd):
       
       application = details[1]
       dataset = details[2]
+      result = details[3]
       
-      status = self.api.createTask(application=application, dataset=dataset)      
+      status = self.api.createTask(application=application, dataset=dataset, result=result)      
       self.doStatus(status)
       
       return
@@ -134,8 +135,8 @@ class ReorJSCLI(cmd.Cmd):
         self.normal('Shows the specifics for task [i]')
         return
       elif specific == 'create':
-        self.bad('Usage: task create [application id] [dataset id]')
-        self.normal('Creates a task by combining application [application id] and dataset [dataset id]')
+        self.bad('Usage: task create [application id] [dataset id] [result dataset id]')
+        self.normal('Creates a task by combining application [application id] and dataset [dataset id]. Stores the result in [result dataset id]')
         return
 
     #if we got this far we need to show the default

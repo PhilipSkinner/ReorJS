@@ -13,7 +13,7 @@ class Dataset(ObjectBase):
     self.source_username 	= self.Column('source_username', str)
     self.source_password 	= self.Column('source_password', str)
     self.source_table		= self.Column('source_table', str)
-    self.created 		= self.Column('created', str)
+    self.created 		= self.Column('created', str, null=True)
 
   def __repr__(self):
     return "<Dataset('%s')>" % self.id

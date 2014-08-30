@@ -35,14 +35,18 @@ class RedisRemote(base.RemoteConnection):
       print "Defaulting to 1000 rows"
       rows = 1000
     
+    results = []
     toReturn = []
 
     #gotta love redis
     try:
-      toReturn = self.connection.lrange(self.table, self.cursor, (self.cursor + rows - 1))
+      results = self.connection.lrange(self.table, self.cursor, (self.cursor + rows - 1))
     except:
       print "Issue fetching data from redis"
     
-    #the data inside redis should be ready to use already, it won't be changed hugely
+    #setup the cursors
+    for d in results:
+      toReturn.append({ 'data' : d, 'cursor' : self.cursor })
+      self.cursor += 1      
 
     return toReturn

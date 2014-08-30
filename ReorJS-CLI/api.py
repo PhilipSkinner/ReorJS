@@ -81,11 +81,11 @@ class API():
 			
 		return None
 	
-	def createTask(self, application=None, dataset=None):
+	def createTask(self, application=None, dataset=None, result=None):
 		try:
 			connection = httplib2.Http()		       
 			url = self.host + '/api/v1/task'                       
-                        response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body='application=%s&dataset=%s' % (application, dataset))
+                        response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body='application=%s&dataset=%s&result=%s' % (application, dataset, result))
                                 
                         if response.status == 200:
                               	data = json.loads(content)

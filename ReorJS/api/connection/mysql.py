@@ -184,7 +184,7 @@ class Connection(ConnectionBase):
               values.append('"%s"' % value.value())
       
         query = "INSERT INTO %s (%s) VALUES (%s)" % (object.__tablename__, ",".join(columns), ",".join(values))
-      
+        
         cursor = self.connection().cursor()
         cursor.execute(query)
         self.connection().commit()

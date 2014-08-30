@@ -3,7 +3,7 @@ import api
 
 class APIDataSetHandler(BaseHandler):
   def get(self, id=None):  
-    if id == None:
+    if id == None or id == '':
       results = api.db.Dataset.search({})
       
       self.payload([r.to_serializable_object() for r in results])
@@ -26,17 +26,21 @@ class APIDataSetHandler(BaseHandler):
     source_username 	= self.get_argument('source_username', None)
     source_port 	= self.get_argument('source_port', None)
     source_table 	= self.get_argument('source_table', None)
+    source_password	= self.get_argument('source_password', None)
     
     if name == None or name.replace(' ', '') == '':
       self.error('2002', 'Dataset requires a name')
       return
     
-    if id == None:
+    if id == None or id == '':
+      print "Creating"
+    
       dataset = api.db.Dataset.create({ 'name' 			: name, 
                                         'source_type' 		: source_type, 
                                         'source_name' 		: source_name, 
                                         'source_hostname' 	: source_hostname, 
                                         'source_username' 	: source_username, 
+                                        'source_password'	: source_password,
                                         'source_port' 		: source_port, 
                                         'source_table' 		: source_table })
       dataset.update()
@@ -55,6 +59,7 @@ class APIDataSetHandler(BaseHandler):
       dataset.source_name.value(source_name)
       dataset.source_hostname.value(source_hostname)
       dataset.source_username.value(source_username)
+      dataset.source_password.value(source_password)
       dataset.source_port.value(source_port)
       dataset.source_table.value(source_table)
       dataset.update()
@@ -66,7 +71,7 @@ class APIDataSetHandler(BaseHandler):
     self.post(id=id)
   
   def delete(self, id=None):
-    if id == None:
+    if id == None or id == '':
       self.error('2003', 'Cannot delete dataset without a dataset id')
       return
     
@@ -83,7 +88,7 @@ class APIDataSetHandler(BaseHandler):
 
 class APIDataSetDataHandler(BaseHandler):
   def get(self, id=None):
-    if id == None:
+    if id == None or id == '':
       self.error('2004', 'Dataset data fetching requires dataset id')
       return
     

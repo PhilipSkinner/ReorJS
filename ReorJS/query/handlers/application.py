@@ -3,7 +3,7 @@ import api
 
 class APIApplicationHandler(BaseHandler):
   def get(self, id=None):
-    if id == None:
+    if id == None or id == '':
       results = api.db.Application.search({})
       
       self.payload([r.to_serializable_object() for r in results])
@@ -30,7 +30,7 @@ class APIApplicationHandler(BaseHandler):
       self.error('1003', 'Application requires a program')      
       return            
     
-    if id == None:
+    if id == None or id == '':
       application = api.db.Application.create({ 'name' : name, 'program' : program })
       application.update()
       
@@ -51,7 +51,7 @@ class APIApplicationHandler(BaseHandler):
       return
   
   def delete(self, id=None):
-    if id == None:
+    if id == None or id == '':
       self.error('1004', 'Cannot delete application without an application id')
       return
     

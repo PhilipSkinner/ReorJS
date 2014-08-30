@@ -48,16 +48,20 @@ class BaseHandler():
     return
                     
   def get(self):
-    print "Get needs to be overridden"
+    self.error('405', 'Unsupported method - GET')
+    return
   
   def post(self):
-    print "Post needs to be overridden"
+    self.error('405', 'Unsupported method - POST')
+    return
   
   def delete(self):
-    print "Delete needs to be overridden"
+    self.error('405', 'Unsupported method - DELETE')
+    return
                         
   def put(self):
-    print "Put needs to be overridden"
+    self.error('405', 'Unsupported method - PUT')
+    return
     
   def options(self):
     print "Options needs to be overridden"

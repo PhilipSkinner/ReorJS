@@ -13,9 +13,6 @@ stacker = None
 def initStacker():
     global stacker
     stacker = StackManager(4096, method=RANDOM)
-    
-    print stacker
-    
     return True
 
 class StackManager(object):
@@ -42,7 +39,7 @@ class StackManager(object):
       ids = []
       for i,t in self._tasks.iteritems():
         ids.append(str(t.dataset_id.value()))
-      
+        
       for i in ids:
         if i in self._datasets:
           #remove any that don't exist anymore in our task list
@@ -66,6 +63,82 @@ class StackManager(object):
       for t in tasks:
         if t.id.value() not in self._tasks:
           self._tasks[t.id.value()] = t
+    
+    def get_connection(self, dataset):
+      #do we have a connection for this dataset?
+      if dataset.id.value() not in self._connections:
+        #nope, we'd better make one
+             
+        #man I love this crappy list of crap
+            
+        if dataset.source_type.value() == 'local':
+          #we're using the api database
+          import remote.local
+              
+          self._connections[dataset.id.value()] = remote.local.LocalRemote(name			= dataset.source_name.value(), 
+                                                                           hostname		= dataset.source_hostname.value(), 
+                                                                           port			= dataset.source_port.value(),
+                                                                           username		= dataset.source_username.value(), 
+                                                                           password		= dataset.source_password.value(), 
+                                                                           table		= dataset.source_table.value())
+        elif dataset.source_type.value() == 'mysql':
+          #its a mysql datasource
+          import remote.mysql
+              
+          self._connections[dataset.id.value()] = remote.mysql.MySQLRemote(name			= dataset.source_name.value(), 
+                                                                           hostname		= dataset.source_hostname.value(), 
+                                                                           port			= dataset.source_port.value(),
+                                                                           username		= dataset.source_username.value(),
+                                                                           password		= dataset.source_password.value(),
+                                                                           table		= dataset.source_table.value())
+        elif dataset.source_type.value() == 'mongo':
+          #its mongo
+          import remote.mongo
+              
+          self._connections[dataset.id.value()] = remote.mongo.MongoRemote(name			= dataset.source_name.value(), 
+                                                                           hostname		= dataset.source_hostname.value(), 
+                                                                           port			= dataset.source_port.value(),
+                                                                           username		= dataset.source_username.value(),
+                                                                           password		= dataset.source_password.value(),
+                                                                           table		= dataset.source_table.value())
+        elif dataset.source_type.value() == 'hadoop':
+          #hadoop connector
+          import remote.hadoop
+              
+          self._connections[dataset.id.value()] = remote.hadoop.HadoopRemote(name		= dataset.source_name.value(), 
+                                                                             hostname		= dataset.source_hostname.value(), 
+                                                                             port		= dataset.source_port.value(),
+                                                                             username		= dataset.source_username.value(),
+                                                                             password		= dataset.source_password.value(),
+                                                                             table		= dataset.source_table.value())
+        elif dataset.source_type.value() == 'redis':
+          #from redis
+          import remote.redis
+              
+          self._connections[dataset.id.value()] = remote.redis.RedisRemote(name			= dataset.source_name.value(), 
+                                                                           hostname		= dataset.source_hostname.value(), 
+                                                                           port			= dataset.source_port.value(),
+                                                                           username		= dataset.source_username.value(),
+                                                                           password		= dataset.source_password.value(),
+                                                                           table		= dataset.source_table.value())
+        elif dataset.source_type.value() == 'memcached':
+          #from memcached
+          import remote.memcached
+              
+          self._connections[dataset.id.value()] = remote.memcached.MemcachedRemote(name			= dataset.source_name.value(), 
+                                                                                   hostname		= dataset.source_hostname.value(), 
+                                                                                   port			= dataset.source_port.value(),
+                                                                                   username		= dataset.source_username.value(),
+                                                                                   password		= dataset.source_password.value(),          
+                                                                                   table		= dataset.source_table.value())
+          
+    
+      #just to make sure
+      if dataset.id.value() in self._connections:
+        #hoorah
+        return self._connections[dataset.id.value()]
+      
+      return None    
     
     def add_task(self, task):
       self.stack.append(task)
@@ -127,85 +200,50 @@ class StackManager(object):
           
         #foreach task, read in some data
         for task in toRead:
-          dataset = self._datasets[task.dataset_id.value()]
-        
-          #do we have a connection for this dataset?
-          if dataset.id.value() not in self._connections:
-            #nope, we'd better make one
+          if str(task.dataset_id.value()) in self._datasets:
+            dataset = self._datasets[str(task.dataset_id.value())]
             
-            #man I love this crappy list of crap
+            connection = self.get_connection(dataset)        
+            if connection != None:
+              #we can fetch some data
+              data = self._connections[dataset.id.value()].fetch_data(rows=10)
             
-            if dataset.source_type.value() == 'local':
-              #we're using the api database
-              import remote.local
-              
-              self._connections[dataset.id.value()] = remote.local.LocalRemote(name			= dataset.source_name.value(), 
-                                                                               hostname			= dataset.source_hostname.value(), 
-                                                                               port			= dataset.source_port.value(),
-                                                                               username			= dataset.source_username.value(), 
-                                                                               password			= dataset.source_password.value(), 
-                                                                               table			= dataset.source_table.value())
-            elif dataset.source_type.value() == 'mysql':
-              #its a mysql datasource
-              import remote.mysql
-              
-              self._connections[dataset.id.value()] = remote.mysql.MySQLRemote(name			= dataset.source_name.value(), 
-                                                                               hostname			= dataset.source_hostname.value(), 
-                                                                               port			= dataset.source_port.value(),
-                                                                               username			= dataset.source_username.value(),
-                                                                               password			= dataset.source_password.value(),
-                                                                               table			= dataset.source_table.value())
-            elif dataset.source_type.value() == 'mongo':
-              #its mongo
-              import remote.mongo
-              
-              self._connections[dataset.id.value()] = remote.mongo.MongoRemote(name			= dataset.source_name.value(), 
-                                                                               hostname			= dataset.source_hostname.value(), 
-                                                                               port			= dataset.source_port.value(),
-                                                                               username			= dataset.source_username.value(),
-                                                                               password			= dataset.source_password.value(),
-                                                                               table			= dataset.source_table.value())
-            elif dataset.source_type.value() == 'hadoop':
-              #hadoop connector
-              import remote.hadoop
-              
-              self._connections[dataset.id.value()] = remote.hadoop.HadoopRemote(name			= dataset.source_name.value(), 
-                                                                               hostname			= dataset.source_hostname.value(), 
-                                                                               port			= dataset.source_port.value(),
-                                                                               username			= dataset.source_username.value(),
-                                                                               password			= dataset.source_password.value(),
-                                                                               table			= dataset.source_table.value())
-            elif dataset.source_type.value() == 'redis':
-              #from redis
-              import remote.redis
-              
-              self._connections[dataset.id.value()] = remote.redis.RedisRemote(name			= dataset.source_name.value(), 
-                                                                               hostname			= dataset.source_hostname.value(), 
-                                                                               port			= dataset.source_port.value(),
-                                                                               username			= dataset.source_username.value(),
-                                                                               password			= dataset.source_password.value(),
-                                                                               table			= dataset.source_table.value())
-            elif dataset.source_type.value() == 'memcached':
-              #from memcached
-              import remote.memcached
-              
-              self._connections[dataset.id.value()] = remote.memcached.MemcachedRemote(name			= dataset.source_name.value(), 
-                                                                                       hostname			= dataset.source_hostname.value(), 
-                                                                                       port			= dataset.source_port.value(),
-                                                                                       username			= dataset.source_username.value(),
-                                                                                       password			= dataset.source_password.value(),          
-                                                                                       table			= dataset.source_table.value())
-          
-          #just to make sure
-          if dataset.id.value() in self._connections:
-            #we can fetch some data
-            data = self._connections[dataset.id.value()].fetch_data(rows=10)
-            
-            for d in data:
-              self.add_task({ 'script' : task.program.value(), 'data' : d }) 
-
+              for d in data:
+                #cursor is result dataset along with the cursor position in the data read
+                self.add_task({ 'script' : task.program.value(), 'data' : d['data'], 'cursor' : '%s-%s' % (task.result_id.value(), d['cursor']) }) 
       try:
         return self.stack.popleft()
       except:
         return None      
 
+    def receive_result(self, cursor=None, result=None):
+     if cursor == None or cursor == '' or result == None or result == '':
+      return False
+     
+     #lets see if we can find the dataset for this
+     tmp = cursor.split('-')
+     datasetId = tmp[0]
+     cursorId = tmp[1]
+
+     #get our dataset
+     dataset = None
+     if datasetId not in self._datasets:
+       dataset = api.db.Dataset.find({ 'id' : datasetId })
+       if dataset != None:
+         self._datasets[str(dataset.id.value())] = dataset
+     
+     if datasetId not in self._datasets:
+       #we had some sort of serious issue here
+       return False
+              
+     dataset = self._datasets[datasetId]
+     
+     #get our connection
+     connection = self.get_connection(dataset)     
+     
+     if connection != None:
+       connection.save_result(result=result, cursor=cursorId)
+     
+     return True     
+      
+          

@@ -47,4 +47,10 @@ class RemoteConnection():
     if self.noEncode():
       return data
       
-    return [json.dumps(d) for d in data]
+    return [{ 'data' : json.dumps(d['data']), 'cursor' : d['cursor'] } for d in data]
+
+  def save_result(self, result=None, cursor=None):
+    if result == None or cursor == None:
+      return
+    
+    self.insert_data(result, cursor)

@@ -47,14 +47,10 @@ class MySQLRemote(base.RemoteConnection):
     
     query = 'SELECT %s FROM %s LIMIT %d, %d' % (",".join(self.columns), self.table, self.cursor, rows)
     
-    print query
-    
     c = self.connection.cursor()
     c.execute(query)
     
     #increase our cursor
-    self.cursor += c.rowcount
-    
     for i in range(c.rowcount):
       row = c.fetchone()
       #turn it into a hash mapped by column
@@ -65,6 +61,19 @@ class MySQLRemote(base.RemoteConnection):
         j += 1
         
       #and add it to our list
-      toReturn.append(temp)
+      toReturn.append({ 'data' : temp, 'cursor' : self.cursor })
+      self.cursor += 1
   
     return toReturn
+
+  def insert_data(self, result, id):
+    #standard result structure, id | result
+    
+    query = 'INSERT INTO %s (id, result) VALUES ("%s", "%s")' % (self.table, id, result)
+    
+    c = self.connection.cursor()
+    c.execute(query)
+    
+    self.connection.commit()
+    
+    return True    
