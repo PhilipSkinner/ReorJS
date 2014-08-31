@@ -299,6 +299,7 @@ def configure():
       print "Writing CLI installation script..."
       f = open('cli.sh', 'w')
       f.write('python installer.py CLI "%s"\n' % configuration['cli']['home'])
+      f.write('python cli.config.py "%s"\n' % configuration['cli']['home'])
       f.close()    
   
     if configuration['node']['proceed']:  

@@ -1,0 +1,129 @@
+ReorJS API
+==========
+
+The ReorJS API is a restful HTTP interface that allows you to manage your ReorJS service.
+
+Please note, if you want to control your service manually you may want to look into using the ReorJS CLI instead. The API requires programming to be used correctly.
+
+Formats & Access
+----------------
+
+The API runs on the same port as the main service, and is accessible through the following url format:
+
+/api/v[version]
+
+This document covers version 1 of the API. For older or newer documentation please find the relevant document in this release.
+
+All data sent from the API is JSON and follows this format:
+
+{
+  'meta' : {
+    'code' : [status code],
+  },
+  'error' : {
+    'message' : [error message],
+  },
+  'status' : {
+    'message' : [status message],
+  },
+  'data' : [encoded object],
+}
+
+Not all sections will be present. If there is an error then only the meta and error sections will be present in the data. If you committed a change operation on the API, the status and meta sections will be present. If you requested data from the api then the data and meta sections will be present.
+
+Applications
+------------
+
+Endpoint: /api/v1/application
+Method: GET
+Description: Fetch a list of applications from the API.
+Arguments: None
+
+Endpoint: /api/v1/application
+Method: POST
+Description: Create a new application.
+Arguments:
+  name 		=> The name of the program
+  program 	=> The Javascript program
+
+Endpoint: /api/v1/application/[application id]
+Method: GET
+Description: Gets the details of the application
+Arguments: None
+
+Endpoint: /api/v1/application/[application id]
+Method: POST
+Description: Modifies the application
+Arguments:
+  name		=> The name of the program
+  program	=> The Javascript program
+
+Endpoint: /api/v1/application/[application id]
+Method: DELETE
+Description: Deletes the application
+Arguments: None
+
+Datasets
+--------
+
+Endpoint: /api/v1/dataset
+Method: GET
+Description: Fetch a list of datasets from the API.
+Arguments: None
+
+Endpoint: /api/v1/dataset
+Method: POST
+Description: Create a new dataset
+Arguments:
+  name			=> The name of the dataset
+  source_type		=> The type of source (mysql, redis, mongo)
+  source_hostname 	=> The hostname of the source
+  source_port		=> The port of the source
+  source_name		=> The name of the source database
+  source_table		=> The name of the source table
+  source_username	=> The username for connecting to the source
+  source_password	=> The password for connecting to the source
+
+Endpoint: /api/v1/dataset/[dataset id]
+Method: GET
+Description: Gets the details of the dataset
+Arguments: None
+
+Endpoint: /api/v1/dataset/[dataset id]
+Method: POST
+Description: Updates the datasets details.
+Arguments:
+  name			=> The name of the dataset
+  source_type		=> The type of source (mysql, redis, mongo)
+  source_hostname 	=> The hostname of the source
+  source_port		=> The port of the source
+  source_name		=> The name of the source database
+  source_table		=> The name of the source table
+  source_username	=> The username for connecting to the source
+  source_password	=> The password for connecting to the source
+
+Endpoint: /api/v1/dataset/[dataset id]
+Method: DELETE
+Description: Deletes the dataset
+Arguments: None
+
+Tasks
+-----
+
+Endpoint: /api/v1/tasks
+Method: GET
+Description: Fetch a list of tasks from the API
+Arguments: None
+
+Endpoint: /api/v1/tasks
+Method: POST
+Description: Creates a task
+Arguments:
+  application		=> The ID of the application to run
+  dataset		=> The ID of the dataset to use as source data
+  result		=> The ID of the dataset to store the result in
+
+Endpoint: /api/v1/tasks/[task id]
+Method: GET
+Description: Gets the details of the task
+Arguments: None
