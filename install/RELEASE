@@ -1,0 +1,6 @@
+== 0.0.1 ==
+
+* First version of open source crowdcalc platform, rebranded to ReorJS
+	- Cutdown version of the API
+	- Minimal version of the stacker
+	- New support website - http://reorjs.com
