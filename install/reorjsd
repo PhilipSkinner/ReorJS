@@ -12,7 +12,7 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-dir='/usr/local/reorjs/reorjsd'
+dir=''
 exec="python main.py"
 prog="reorjs"
 lockfile=/var/lock/subsys/$prog

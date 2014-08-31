@@ -39,4 +39,21 @@ elif db == 'mongo':
 f.write('--server = %s\n' % http)
 f.close()
 
+print "Generating system startup script"
+r = open('reorjsd', 'r')
+n = open('/etc/init.d/reorjsd', 'w')
+for line in r.readlines():  
+  #strip it for sanity
+  line = line.replace('\n', '').replace('\r', '')
+  if line == "dir=''":
+    n.write("dir='%s'\n" % base)
+  else:
+    n.write("%s\n" % line)
+    
+r.close()
+n.close()
+
+print "Registering service"
+os.system('chkconfig --add reorjsd')
+
 print "Configuration setup and examples in place"
