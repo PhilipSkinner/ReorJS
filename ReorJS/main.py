@@ -31,8 +31,6 @@ def main():
 	set_setting('MYSQL_PASSWORD',		config.mysql_password)
 	set_setting('HTTP_SERVICE',		config.server)
 	
-	print settings.MYSQL_NAME
-	
 	#we need to configure our API database from settings
 	if api.connect():	
 		#and then our stacker
