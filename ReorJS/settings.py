@@ -2,6 +2,9 @@ import os
 
 #global values for use in the application
 
+#logging
+LOG_LOCATION = '/var/log/reorjs'
+
 #debug mode
 DEBUG = False
 VERBOSE = False

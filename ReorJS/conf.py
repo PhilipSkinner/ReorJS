@@ -5,6 +5,9 @@ def configure():
 	parser = argparse.ArgumentParser(description="ReorJS service daemon", fromfile_prefix_chars='@')
 	parser.convert_arg_line_to_args = convert_arg_line_to_args
 
+	#logging
+	parser.add_argument('--log-location', default='/var/log/reorjs', help='Log file directory')
+
 	#debug settings
 	parser.add_argument('--verbose', default=False, help='Verbose output enabled')
 	parser.add_argument('--debug', default=False, help='Debug mode enabled')
