@@ -8,7 +8,7 @@
         --
         
         Author(s)       - Philip Skinner (philip@crowdca.lc)
-        Last modified   - 2014-08-24
+        Last modified   - 2014-08-31
         
         This program is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as published by
@@ -28,7 +28,6 @@
 
 import os
 import sys
-
 
 def configure():
   header('Welcome to the ReorJS Configuration Tool')
@@ -324,6 +323,19 @@ def configure():
 
   info('Bye!')
 
+def clean():
+  header('Welcome to the ReorJS Configuration Tool')
+  print "We are now performing a clean of any auto-generated install scripts.\n"
+
+  files = ['reorjsd.sh', 'cli.sh', 'node.sh', 'install.sh']
+
+  for f in files:    
+    question('Removing %s' % f)
+    os.system('rm -rf %s' % f)
+    good('Removed')
+    
+  print "\nAll clean, just run 'python configure.py' again to generate your install scripts"
+
 # helpers
 
 class bcolors:
@@ -420,5 +432,10 @@ def checkPackage(name, version=None):
     return True
   except ImportError:
     return False
+
+if len(sys.argv) == 2:
+  if sys.argv[1] == 'clean':
+    clean()
+    sys.exit(0)
 
 configure()
