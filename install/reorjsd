@@ -1,0 +1,72 @@
+#!/bin/sh
+#
+# reorjs: Run the ReorJS compute server
+#
+# chkconfig: 35 90 12
+# description: Starts the ReorJS compute server
+
+### BEGIN INIT INFO
+# Provides:          reorjs
+### END INIT INFO
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+dir='/usr/local/reorjs/reorjsd'
+exec="python main.py"
+prog="reorjs"
+lockfile=/var/lock/subsys/$prog
+pid=0
+
+start() {
+    echo -n $"Starting $prog: "
+    if kill -0 $(cat $lockfile) > /dev/null 2>&1; then
+    	failure $"Starting $prog"
+    	echo
+    	return 0
+    fi
+    
+    cd $dir
+    $exec &
+    pid=$!
+    success $"Starting $prog"
+    touch $lockfile
+    echo $pid > $lockfile
+    echo
+    return 0
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    if kill -0 $(cat $lockfile) > /dev/null 2>&1; then    
+	kill $(cat $lockfile)
+	success $"Stopping $prog"
+        echo
+    	return 0
+    fi
+    failure $"Stopping $prog"
+    echo
+    return 0
+}
+
+restart() {
+    stop
+    start
+}
+
+case "$1" in
+    start)
+        $1
+        ;;
+    stop)
+        $1
+        ;;
+    restart)
+        $1
+        ;;
+    *)
+        echo $"Usage: $0
+{start|stop|restart}"
+        exit 2
+esac
+exit $?
