@@ -33,8 +33,6 @@ class APIDataSetHandler(BaseHandler):
       return
     
     if id == None or id == '':
-      print "Creating"
-    
       dataset = api.db.Dataset.create({ 'name' 			: name, 
                                         'source_type' 		: source_type, 
                                         'source_name' 		: source_name, 

@@ -5,7 +5,7 @@ import re
 
 class QueryFAPWS(BaseQueryService):
 	def __init__(self, output=None, input=None):
-		print "Setting up FAPWS"
+		logger.LOG.log("Setting up FAPWS")
 
 		import fapws._evwsgi as evwsgi		
 		self.server = evwsgi
@@ -23,7 +23,7 @@ class QueryFAPWS(BaseQueryService):
 			self.input = input
 	
 	def start(self):
-		print "Running FAPWS"
+		logger.LOG.log("Running FAPWS")
 		from fapws import base
 		
 		self.server.start(settings.IP, settings.PORT)

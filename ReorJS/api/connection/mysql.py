@@ -1,4 +1,5 @@
 import copy
+import logger
 from base import ConnectionBase
 from base import ColumnBase
 
@@ -8,7 +9,7 @@ class Connection(ConnectionBase):
 
   def checkObject(self, object):
     #first check, does the table exist?
-    print "Checking for existance of object %s in data source" % object.__tablename__
+    logger.LOG.log("Checking for existance of object %s in data source" % object.__tablename__)
 
     result = None
       
@@ -22,7 +23,7 @@ class Connection(ConnectionBase):
       pass
       
     if result != None:
-      print "Checking existing structure..."
+      logger.LOG.log("Checking existing structure...")
       #convert result into usable dict
       current = {}
         
@@ -63,7 +64,7 @@ class Connection(ConnectionBase):
             correct = False
         
       if not correct:
-        print "Structure is not correct, removing existing object..."
+        logger.LOG.log("Structure is not correct, removing existing object...")
         result = None
           
         query = "DROP TABLE %s" % object.__tablename__
@@ -71,10 +72,10 @@ class Connection(ConnectionBase):
         cursor.execute(query)
         cursor.close()
       else:
-        print "Structure looks good!"
+        logger.LOG.log("Structure looks good!")
 
     if result == None:
-      print "Object %s does not exist yet, creating..." % object.__tablename__
+      logger.LOG.log("Object %s does not exist yet, creating..." % object.__tablename__)
         
       query = "CREATE TABLE %s (" % object.__tablename__
       cols = []
@@ -95,7 +96,7 @@ class Connection(ConnectionBase):
       return []
       
     if object.__tablename__ == None:
-      print "%s Object table name needs to be set" % self
+      logger.LOG.log("%s Object table name needs to be set" % self)
       return []
       
     columns = []
@@ -140,7 +141,7 @@ class Connection(ConnectionBase):
 
   def update(self, object):
     #save our current objects attributes to our permanent store
-    print "Save in DB pls"
+    logger.LOG.log("Save in DB pls")
    
     result = False
     #attempt an update and then fail over to an insert
@@ -156,7 +157,7 @@ class Connection(ConnectionBase):
             set.append(value.__set__())
     
       if pk == None:
-        print "Issue calling update, no primary key given. Defaulting to insert only for %s" % object
+        logger.LOG.log("Issue calling update, no primary key given. Defaulting to insert only for %s" % object)
       else:    
         query += '%s WHERE %s = %s' % (','.join(set), pk.name, pk.value())
         
@@ -190,7 +191,7 @@ class Connection(ConnectionBase):
         self.connection().commit()
         cursor.close()
       
-        print "Inserted %d rows" % cursor.rowcount
+        logger.LOG.log("Inserted %d rows" % cursor.rowcount)
       except:
         pass
 
@@ -203,7 +204,7 @@ class Connection(ConnectionBase):
           pk = value
     
     if pk == None:
-      print "Issue calling delete, no primary key given. Object will not be deleted"
+      logger.LOG.log("Issue calling delete, no primary key given. Object will not be deleted")
       return False
     
     query = "DELETE FROM %s WHERE %s = %s" % (object.__tablename__, pk.name, pk.value())
@@ -212,7 +213,7 @@ class Connection(ConnectionBase):
     self.connection().commit()
     cursor.close()
     
-    print "Object deleted"
+    logger.LOG.log("Object deleted")
     
     return False
   

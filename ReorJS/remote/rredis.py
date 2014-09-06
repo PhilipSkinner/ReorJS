@@ -1,22 +1,23 @@
 import base
 import redis
+import logger
 
 class RedisRemote(base.RemoteConnection):
   def connect(self):
     if self.hostname == None:
-      print "Hostname not given, defaulting to localhost"
+      logger.LOG.log("Hostname not given, defaulting to localhost")
       self.hostname = 'localhost'
       
     if self.port == None:
-      print "Port not given, defaulting to 6379"
+      logger.LOG.log("Port not given, defaulting to 6379")
       self.port = 6379
     
     if self.name == None:
-      print "Database name not given, cannot proceed"
+      logger.LOG.log("Database name not given, cannot proceed")
       return False
       
     if self.table == None:
-      print "No table given, cannot proceed"
+      logger.LOG.log("No table given, cannot proceed")
       return False
   
     self.connection = redis.Redis(host=self.hostname, port=int(self.port))
@@ -32,7 +33,7 @@ class RedisRemote(base.RemoteConnection):
 
   def query(self, rows=None):
     if rows == None:
-      print "Defaulting to 1000 rows"
+      logger.LOG.log("Defaulting to 1000 rows")
       rows = 1000
     
     results = []
@@ -42,7 +43,7 @@ class RedisRemote(base.RemoteConnection):
     try:
       results = self.connection.lrange(self.table, self.cursor, (self.cursor + rows - 1))
     except:
-      print "Issue fetching data from redis"
+      logger.LOG.log("Issue fetching data from redis")
     
     #setup the cursors
     for d in results:

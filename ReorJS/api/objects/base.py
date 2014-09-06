@@ -1,4 +1,5 @@
 import copy
+import logger
 
 class ObjectBase():
   __tablename__ = None
@@ -7,7 +8,7 @@ class ObjectBase():
     self.__attributes__ = False
   
     if parent == None:
-      print "Error attempting object passthrough instantiation, no parent object given."
+      logger.LOG.log("Error attempting object passthrough instantiation, no parent object given.")
 
       return None
       
@@ -32,16 +33,16 @@ class ObjectBase():
       self.__initattributes__()
     
     if not type(params) is dict:
-      print "Parameters passed must be of type dict, not %s" % type(params)
+      logger.LOG.log("Parameters passed must be of type dict, not %s" % type(params))
       return False
     
     for column, value in params.iteritems():
       if not type(column) is str:
-        print "Passed parameter column names must be of type str, not %s" % type(column)
+        logger.LOG.log("Passed parameter column names must be of type str, not %s" % type(column))
         return False
         
       if not hasattr(self, column):
-        print "%s has no such attribute %s" % (self, column)
+        logger.LOG.log("%s has no such attribute %s" % (self, column))
         return False
     
     return True

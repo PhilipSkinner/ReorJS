@@ -1,5 +1,6 @@
 import collections
 import api
+import logger
 import random
 import operator
 import simplejson as json
@@ -164,11 +165,11 @@ class StackManager(object):
         
         #did we actually get anything?
         if len(self._tasks) == 0:
-          print "Attempted to fetch task from system when no tasks have been defined"
+          logger.LOG.log("Attempted to fetch task from system when no tasks have been defined")
           return None
         
         if len(self._datasets) == 0:
-          print "Attempted to fetch task from system when no task datasets have been defined"
+          logger.LOG.log("Attempted to fetch task from system when no task datasets have been defined")
           return None
       
         #we need to fetch some more tasks

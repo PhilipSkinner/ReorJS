@@ -1,17 +1,18 @@
 import base
+import logger
 
 class MemcachedRemote(base.RemoteConnection):
   def connect(self):
     if self.host == None:
-      print "Hostname not given, defaulting to localhost"
+      logger.LOG.log("Hostname not given, defaulting to localhost")
       self.host = 'localhost'
     
     if self.name == None:
-      print "Database name not given, cannot proceed"
+      logger.LOG.log("Database name not given, cannot proceed")
       return False
       
     if self.table == None:
-      print "No table given, cannot proceed"
+      logger.LOG.log("No table given, cannot proceed")
       return False
   
     
@@ -22,7 +23,7 @@ class MemcachedRemote(base.RemoteConnection):
 
   def query(self, rows=None):
     if rows == None:
-      print "Defaulting to 1000 rows"
+      logger.LOG.log("Defaulting to 1000 rows")
       rows = 1000
     
     toReturn = []

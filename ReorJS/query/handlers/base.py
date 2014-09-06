@@ -64,4 +64,5 @@ class BaseHandler():
     return
     
   def options(self):
-    print "Options needs to be overridden"
+    self.error('405', 'Unsupported method - OPTION')
+    return

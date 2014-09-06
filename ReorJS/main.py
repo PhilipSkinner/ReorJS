@@ -33,35 +33,35 @@ def main():
 	set_setting('MYSQL_PASSWORD',		config.mysql_password)
 	set_setting('HTTP_SERVICE',		config.server)
 
-	logger.LOG = logger.Logger()		
-	logger.LOG.system.log('ReorJS service starting...')
-	logger.LOG.system.log('Initializing API')
+	logger.initLogger()
+	logger.LOG.log('ReorJS service starting...')
+	logger.LOG.log('Initializing API')
 	
 	#we need to configure our API database from settings
 	if api.connect():	
 		#and then our stacker		
-		logger.LOG.system.log('Initializing stacker')
+		logger.LOG.log('Initializing stacker')
 		stack.initStacker()
 		
 		#next we need to create our query service
-		logger.LOG.system.log('Initializing query service')
+		logger.LOG.log('Initializing query service')
 		service = query.QueryService()
 		
 		#and run it
-		logger.LOG.system.log('Running service...')
+		logger.LOG.log('Running service...')
 		service.run()		
 	else:
-		logger.LOG.api.log("Error connecting to API database, please check configuration.")
+		logger.LOG.log("Error connecting to API database, please check configuration.")
 	
 
 def set_setting(name, value):
 	if settings.VERBOSE:
-		logger.LOG.system.log('Setting system variable %s to value %s' % (name, value))
+		logger.LOG.log('Setting system variable %s to value %s' % (name, value))
 		
 	setattr(settings, name, value)
 	
 def sigHandler(signal, frame):
-	logger.LOG.system.log('ReorJS service exiting')	
+	logger.LOG.log('ReorJS service exiting')	
 	sys.exit(0)
 
 if __name__ == '__main__':

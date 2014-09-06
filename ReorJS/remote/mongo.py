@@ -1,23 +1,24 @@
 import base
 import pymongo
 import getpass
+import logger
 
 class MongoRemote(base.RemoteConnection):
   def connect(self):
     if self.hostname == None:
-      print "Hostname not given, defaulting to localhost"
+      logger.LOG.log("Hostname not given, defaulting to localhost")
       self.host = 'localhost'
     
     if self.port == None:
-      print "Port not given, defaulting to 27017"
+      logger.LOG.log("Port not given, defaulting to 27017")
       self.port = 27017
     
     if self.name == None:
-      print "Database name not given, cannot proceed"
+      logger.LOG.log("Database name not given, cannot proceed")
       return False
       
     if self.table == None:
-      print "No table given, cannot proceed"
+      logger.LOG.log("No table given, cannot proceed")
       return False
   
     self.connection = pymongo.MongoClient(self.hostname, int(self.port))
@@ -31,7 +32,7 @@ class MongoRemote(base.RemoteConnection):
 
   def query(self, rows=None):
     if rows == None:
-      print "Defaulting to 1000 rows"
+      logger.LOG.log("Defaulting to 1000 rows")
       rows = 1000
     
     collection = self.db[self.table]

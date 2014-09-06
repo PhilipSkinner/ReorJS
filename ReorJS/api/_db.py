@@ -1,4 +1,5 @@
 import settings
+import logger
 from objects.application import Application
 from objects.data import Dataset
 from objects.data import DatasetData
@@ -21,7 +22,7 @@ class APIDB():
 		
 		#and connect
 		if not self.connect():
-			print "Could not connect to API datasource"
+			logger.LOG.log("Could not connect to API datasource")
 			return None
 
 		#object accessors
@@ -55,9 +56,9 @@ class APIDB():
 	
 	def dbconnect(self):
 		if settings.DB_TYPE == 'redis':
-			print "Connecting to redis"
+			logger.LOG.log("Connecting to redis")
 		elif settings.DB_TYPE == 'mysql':
-			print "Connecting to mysql"
+			logger.LOG.log("Connecting to mysql")
 			
 			try:
 				import MySQLdb as mdb
@@ -66,7 +67,7 @@ class APIDB():
 			except:
 				pass
 		elif settings.DB_TYPE == 'mongo':
-			print "Connecting to mongo"
+			logger.LOG.log("Connecting to mongo")
 			
 			try:
 				import pymongo
@@ -77,13 +78,13 @@ class APIDB():
 		
 		
 	def connect(self):
-		print "Attempting API datasource (%s) connection..." % settings.DB_TYPE
+		logger.LOG.log("Attempting API datasource (%s) connection..." % settings.DB_TYPE)
 	
 		self.type = settings.DB_TYPE
 		if settings.DB_TYPE == 'redis':
-			print "Configuring for redis"
+			logger.LOG.log("Configuring for redis")
 		elif settings.DB_TYPE == 'mysql':
-			print "Configuring for mysql"
+			logger.LOG.log("Configuring for mysql")
 
 			try:
 				import connection.mysql as mysql
@@ -93,7 +94,7 @@ class APIDB():
 				return False
 			
 		elif settings.DB_TYPE == 'mongo':
-			print "Configuring for mongo"
+			logger.LOG.log("Configuring for mongo")
 
 			try:
 				import connection.mongo as mongo

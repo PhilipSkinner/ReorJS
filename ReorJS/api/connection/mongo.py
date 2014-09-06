@@ -1,4 +1,5 @@
 import copy
+import logger
 from base import ConnectionBase
 from base import ColumnBase
 from pymongo import ASCENDING, DESCENDING
@@ -11,7 +12,7 @@ class Connection(ConnectionBase):
 
   def checkObject(self, object):
     #first check, does the table exist?
-    print "Checking for existance of object %s in data source" % object.__tablename__
+    logger.LOG.log("Checking for existance of object %s in data source" % object.__tablename__)
       
     result = self.db[object.__tablename__]
       
@@ -23,7 +24,7 @@ class Connection(ConnectionBase):
           pk = value
       
     if pk != None:            
-      print "Ensuring primary key index on collection %s" % object.__tablename__
+      logger.LOG.log("Ensuring primary key index on collection %s" % object.__tablename__)
       result.create_index([(pk.name, ASCENDING)])      
   
   def fixPK(self, object, params):
@@ -52,7 +53,7 @@ class Connection(ConnectionBase):
     params = self.fixPK(object, params)    
       
     if object.__tablename__ == None:
-      print "%s Object table name needs to be set" % self
+      logger.LOG.log("%s Object table name needs to be set" % self)
       return []
       
     pk = None
@@ -81,7 +82,7 @@ class Connection(ConnectionBase):
 
   def update(self, object):
     #save our current objects attributes to our permanent store
-    print "Save in DB pls"
+    logger.LOG.log("Save in DB pls")
    
     doc = {}
     for attribute, value in object.__dict__.items():
@@ -92,7 +93,7 @@ class Connection(ConnectionBase):
           doc[value.name] = value.value()
     
     if pk == None:
-      print "Issue calling update, no primary key given. Defaulting to insert only for %s" % object
+      logger.LOG.log("Issue calling update, no primary key given. Defaulting to insert only for %s" % object)
     else:    
       if self.db == None:
         self.db = self.connection().reorjs
@@ -100,10 +101,8 @@ class Connection(ConnectionBase):
       collection = self.db[object.__tablename__]
       
       if pk.value() == None:
-        print "creating"
         collection.insert(doc)
       else:
-        print "updating"
         collection.update({ pk.name : ObjectId(pk.value()) }, { '$set' : doc }, upsert=True, multi=False)      
 
   def delete(self, object):    
@@ -115,7 +114,7 @@ class Connection(ConnectionBase):
           pk = value
     
     if pk == None:
-      print "Issue calling delete, no primary key given. Object will not be deleted"
+      logger.LOG.log("Issue calling delete, no primary key given. Object will not be deleted")
       return False
 
     if self.db == None:
@@ -124,7 +123,7 @@ class Connection(ConnectionBase):
     collection = self.db[object.__tablename__]
     collection.remove({ pk.name : ObjectId(pk.value()) })    
 
-    print "Object deleted"
+    logger.LOG.log("Object deleted")
     
     return False
   

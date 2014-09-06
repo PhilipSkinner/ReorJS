@@ -1,4 +1,5 @@
 import base
+import logger
 
 class MySQLRemote(RemoteConnection):
   def connect(self):
@@ -10,7 +11,7 @@ class MySQLRemote(RemoteConnection):
 
   def query(self, rows=None):
     if rows == None:
-      print "Defaulting to 1000 rows"
+      logger.LOG.log("Defaulting to 1000 rows")
       rows = 1000
     
     toReturn = []

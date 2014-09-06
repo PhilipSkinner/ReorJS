@@ -1,7 +1,8 @@
 from base import BaseQueryService
 import settings
+import logger
 
 class QueryBaseHTTPServer(BaseQueryService):
 	def __init__(self):
-		print "Setting up QueryBaseHTTPServer"
+		logger.LOG.log("Setting up QueryBaseHTTPServer")
 

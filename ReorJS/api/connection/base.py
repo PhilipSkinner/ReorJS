@@ -1,20 +1,21 @@
 import copy
+import logger
 
 class ConnectionBase():
   def __init__(self):
-    print "Connection initialization requires overriding for correct instantiation"
+    logger.LOG.log("Connection initialization requires overriding for correct instantiation")
 
   def checkObject(self, object):
-    print "checkObject method requires overriding"
+    logger.LOG.log("checkObject method requires overriding")
 
   def search(self, object, params={}, options={}):
-    print "search method requires overriding"
+    logger.LOG.log("search method requires overriding")
 
   def update(self, object):
-    print "update method requires overriding"
+    logger.LOG.log("update method requires overriding")
 
   def delete(self, object):    
-    print "delete method requires overriding"
+    logger.LOG.log("delete method requires overriding")
     
   def column(self, name, type, primary_key=False, null=False):
     return ColumnBase(name, type, primary_key=primary_key, null=null)
@@ -29,7 +30,7 @@ class ColumnBase():
     self.primary_key = primary_key
     
     if self.null and self.primary_key:
-      print "Column cannot be null and be primary key, fixing"
+      logger.LOG.log("Column cannot be null and be primary key, fixing")
       self.null = False
       
     self.afterInit()
@@ -38,12 +39,12 @@ class ColumnBase():
     return self
 
   def __set__(self):
-    print "__set__ method requires overriding"
+    logger.LOG.log("__set__ method requires overriding")
 
     return None
 
   def __create__(self):
-    print "__create__ method requires overriding"
+    logget.LOG.log("__create__ method requires overriding")
   
     return None
 

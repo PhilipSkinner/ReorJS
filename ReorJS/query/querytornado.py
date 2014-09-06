@@ -1,5 +1,6 @@
 from base import BaseQueryService
 import settings
+import logger
 import handlers as _handlers
 
 _app = None
@@ -34,7 +35,7 @@ class QueryTornado(BaseQueryService):
 		self.application.listen(settings.PORT)
 
 	def start(self):
-		print "Running tornado"	
+		logger.LOG.log("Running tornado")
 		import tornado.ioloop		
 		tornado.ioloop.IOLoop.instance().start()
 

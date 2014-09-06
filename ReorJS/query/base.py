@@ -1,6 +1,6 @@
 class BaseQueryService():
   def __init__(self, output=None):
-    print "Initialization needs to be overridden"
+    logger.LOG.log("Initialization needs to be overridden")
     
   def start(self):
-    print "Startup methods needs to be overridden"
+    logger.LOG.log("Startup methods needs to be overridden")

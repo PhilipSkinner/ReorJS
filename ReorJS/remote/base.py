@@ -15,9 +15,9 @@ class RemoteConnection():
     self.columns = []
     
     if self.ready:
-      print "Remote connection established"
+      logger.LOG.log("Remote connection established")
     else:
-      print "Remote connection could not be established"
+      logger.LOG.log("Remote connection could not be established")
 
   def noEncode(self):
     return False
@@ -26,14 +26,14 @@ class RemoteConnection():
     self.cursor = 0
 
   def connect(self):
-    print "Connect needs to be overridden"
+    logger.LOG.log("Connect needs to be overridden")
     return False
     
   def query(self, rows=None):
-    print "Query needs to be overridden"
+    logger.LOG.log("Query needs to be overridden")
   
   def readColumns(self):
-    print "readColumns needs to be overridden"    
+    logger.LOG.log("readColumns needs to be overridden")
   
   def fetch_data(self, rows=1000):
     if len(self.columns) == 0:
