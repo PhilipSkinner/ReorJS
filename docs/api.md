@@ -127,3 +127,73 @@ Endpoint: /api/v1/tasks/[task id]
 Method: GET
 Description: Gets the details of the task
 Arguments: None
+
+== Error Codes ==
+
+Generally any errors returned by the system will be accompanied by an descriptive error message to assist you with the debugging of the problem.
+
+Here is a list of the standard errors that are returned by the system and what they mean:
+
+1001 => Application <id> not found
+The application referenced by the ID passed to the system was not found in the API database.
+
+1002 => Application requires a name
+The name parameter for the application referenced in the request is either missing or not an acceptable value. Check the arguments you are passing.
+
+1003 => Application requires a program
+The program parameter for the application referenes in the request is either missing of not an acceptable value. Check the arguments you are passing.
+
+1004 => Cannot delete application without an application id
+An attempt was made to delete an application without providing the application id that the operation was to be carried out on.
+
+405 => Unsupported method - <method>
+A request using the method <method> was sent to the endpoint in question, but that method is not supported. For a full list of supported methods check the API documentation.
+
+2001 => Dataset <id> not found
+The dataset referenced by the ID passed to the system was not found in the API database.
+
+2002 => Dataset requires a name
+The name parameter for the dataset referenced in the request is either missing or not an acceptable value. Check the arguments you are passing.
+
+2003 => Cannot delete dataset without a dataset id
+An attempt was made to delete a dataset without providing the dataset id that the operation was to be carried out on.
+
+2004 => Dataset data fetching requires dataset id
+An attempt was made to fetch data from a dataset without providing the dataset id that the operation was to be carried out on.
+
+2005 => Data must be provided for insertion
+In order to insert data into a dataset, the data must be provided in the request. Any attempt to insert null or blank datapoints into a dataset will result in this error.
+
+3001 => Task <id> not found
+The task references by the ID passed to the system was not found in the API database.
+
+3002 => Application ID required
+The application id parameter for the task was not provided. Check the arguments you are passing.
+
+3003 => Dataset ID required
+The source dataset id parameter for the task was not provided. Check the arguments you are passing.
+
+3004 => Result ID required
+The result dataset id parameter for the task was not provided. Check the arguments you are passing.
+
+3005 => No such application <id>
+An application id was provided to the request that does not reference an application that could be found in the API database.
+
+3006 => No such dataset <id>
+A dataset id for the source dataset was provided to the request that does not reference a dataset that could be found in the API database.
+
+3007 => No such result dataset <id
+A dataset id for the result dataset was provided to the request that does not reference a dataset that could be found in the API database.
+
+3010 => Task manipulation not yet supported
+Modifying a task once it is in the system is not yet supported. Please install a newer release or consider updating to the latest master version from our repo.
+
+404 => No tasks waiting
+No tasks are currently waiting to be processed and as such no workunits are available for processing.
+
+5001 => Missing cursor for result
+The special cursor value for the result was missing from the result. Please ensure that your compute client is returning data in the correct manner. Check the client best practices document to ensure your client is compatible with the system.
+
+5002 => Missing result for cursor
+The result for this cursor was missing. Make sure that your application code is returning a correct result for every possible input value. Check the application development best practices document to ensure your application is as compatible as possible with the system.
+

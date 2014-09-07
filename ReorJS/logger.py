@@ -7,10 +7,24 @@ class Logger():
     logging.info("Started logging")
 
   def log(self, value):
+    logging.error(value)
+
+  def info(self, value):
     logging.info(value)
+  
+  def debug(self, value):
+    logging.debug(value)
 
 LOG = None
 
 def initLogger():
   global LOG
-  LOG = Logger('%s/reorjsd.log' % settings.LOG_LOCATION, logging.INFO)
+  level = logging.ERROR
+  
+  if settings.VERBOSE:
+    level = logging.INFO
+  
+  if settings.debug:
+    level = logging.DEBUG
+  
+  LOG = Logger('%s/reorjsd.log' % settings.LOG_LOCATION, level)
