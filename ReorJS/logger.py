@@ -6,8 +6,14 @@ class Logger():
     logging.basicConfig(filename=logfile,level=level)
     logging.info("Started logging")
 
-  def log(self, value):
+  def critical(self, value):
     logging.error(value)
+
+  def error(self, value):
+    logging.error(value)
+
+  def log(self, value):
+    logging.warning(value)
 
   def info(self, value):
     logging.info(value)
@@ -19,7 +25,7 @@ LOG = None
 
 def initLogger():
   global LOG
-  level = logging.ERROR
+  level = logging.WARNING
   
   if settings.VERBOSE:
     level = logging.INFO
