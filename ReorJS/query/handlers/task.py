@@ -54,7 +54,8 @@ class APITaskHandler(BaseHandler):
       return
     
     if id == None or id == '':
-      task = api.db.Task.create({ 'application_id' : application, 'dataset_id' : dataset, 'program' : app.program.value(), 'result_id' : result })
+      task = api.db.Task.create({ 'application_id' : application, 'dataset_id' : dataset, 'program' : app.program.value(), 'result_id' : result, 
+                                  'status' : 'Pending', 'progress' : '0.00%', 'time_started' : 0, 'time_ended' : 0, 'block_size' : 100, 'completion_cursor' : 0 })
       task.update()
       
       self.status('200', 'Task created')

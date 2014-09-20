@@ -41,3 +41,6 @@ MYSQL_HOST = None
 MYSQL_PORT = None
 MYSQL_USER = None
 MYSQL_PASSWORD = None
+
+#stacker settings
+BLOCKSIZE = 100

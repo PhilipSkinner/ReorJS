@@ -41,6 +41,9 @@ def configure():
 	parser.add_argument('--mysql-port', default='3306', help='MySQL port')
 	parser.add_argument('--mysql-user', default='reorjs', help='MySQL username')
 	parser.add_argument('--mysql-password', default='reorjs', help='MySQL password')
+	
+	#system settings
+	parser.add_argument('--blocksize', default='100', help='Default processing block size')
 
 	#config file
 	parser.add_argument('--config', default='/etc/reorjs/reorjsd.conf', help='Configuration file - see config format in docs')
