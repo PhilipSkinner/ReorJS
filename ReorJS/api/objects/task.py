@@ -10,16 +10,30 @@ class Task(ObjectBase):
     self.result_id 		= self.Column('result_id', int)
     self.application_id 	= self.Column('application_id', int)
     self.program 		= self.Column('program', str)
+    self.status			= self.Column('status', str)
+    self.progress		= self.Column('progress', str)
+    self.time_started		= self.Column('time_started', int)
+    self.time_ended		= self.Column('time_ended', int)
+    self.block_size		= self.Column('block_size', int)
+    self.read_cursor		= self.Column('read_cursor', int)
+    self.completion_cursor	= self.Column('completion_cursor', int)
   
   def __repr__(self):
     return "<Task('%s')>" % self.id
   
   def to_serializable_object(self):
     return {
-      'id' 		: str(self.id.value()),
-      'owner' 		: self.owner.value(),
-      'dataset' 	: self.dataset_id.value(),
-      'result' 		: self.result_id.value(),
-      'application' 	: self.application_id.value(),
-      'program' 	: self.program.value(),
+      'id' 			: str(self.id.value()),
+      'owner' 			: self.owner.value(),
+      'dataset' 		: self.dataset_id.value(),
+      'result' 			: self.result_id.value(),
+      'application' 		: self.application_id.value(),
+      'program' 		: self.program.value(),
+      'status'			: self.status.value(),
+      'progress'		: self.progress.value(),
+      'time_started'		: self.time_started.value(),
+      'time_ended'		: self.time_ended.value(),
+      'block_size'		: self.block_size.value(),
+      'read_cursor'		: self.read_cursor.value(),
+      'completion_cursor' 	: self.completion_cursor.value(),      
     }

@@ -37,7 +37,7 @@ class MongoRemote(base.RemoteConnection):
     
     collection = self.db[self.table]
     
-    results = collection.find({}).skip(self.cursor).limit(rows)
+    results = collection.find({}).skip(self.cursor - 1).limit(rows)
     
     toReturn = []
     

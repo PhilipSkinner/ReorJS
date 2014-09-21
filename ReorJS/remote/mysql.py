@@ -46,7 +46,7 @@ class MySQLRemote(base.RemoteConnection):
     
     toReturn = []        
     
-    query = 'SELECT %s FROM %s LIMIT %d, %d' % (",".join(self.columns), self.table, self.cursor, rows)
+    query = 'SELECT %s FROM %s LIMIT %d, %d' % (",".join(self.columns), self.table, (self.cursor - 1), rows)
     
     c = self.connection.cursor()
     c.execute(query)
