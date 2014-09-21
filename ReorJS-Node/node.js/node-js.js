@@ -39,7 +39,7 @@ function readQueue() {
 						_compute.parsed.data.script = _compute.parsed.data.script.replace("\\n", "\n").replace('\\r', '\n').replace('\\t', '\r');
 					}
 					
-					_compute.result = eval('(' + _compute.parsed.data.script + ')')(_compute.parsed.data.id, _compute.parsed.data.data);
+					_compute.result = eval('(' + _compute.parsed.data.script + ')')(_compute.parsed.data.cursor, _compute.parsed.data.data);
 				} catch(e) {
 					console.log("Error in script", _compute.parsed.data.script);
 					console.log(e);
@@ -133,7 +133,7 @@ var _getFailHandler = function() {
 
 function main() {
 	if (getCounter < 1000) {
-		var req = http.get('http://' + SETTINGS.distributor + ':' +  SETTINGS.port + '/output/v1/task?clientid=5', _getHandler);
+		var req = http.get('http://' + SETTINGS.distributor + ':' +  SETTINGS.port + '/output/v1/task', _getHandler);
 		req.on('error', _getFailHandler);
 		getCounter++;
 	} else {

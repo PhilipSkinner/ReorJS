@@ -26,7 +26,12 @@ class QueryBaseHTTPServer(BaseQueryService):
 class HTTPHandler(BaseHTTPRequestHandler):
 	def determine_operation(self, method='GET', url=''):
 		#reset
-		self._headers = []
+		self._headers = [
+	                ('Access-Control-Allow-Origin', '*'),
+	                ('Access-Control-Allow-Headers', 'X-Request, X-Requested-With'),
+	                ('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE, PUT'),
+	                ('Access-Control-Max-Age', '1728000')
+		]
 		self._response = ''
 		self.parsed_path = urlparse.urlparse(self.path)
 		self.args = urlparse.parse_qs(self.parsed_path.query)

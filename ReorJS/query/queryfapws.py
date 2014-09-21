@@ -237,7 +237,12 @@ class QueryFAPWS(BaseQueryService):
 class FAPWSResponse():
 	def __init__(self, environ, start_response):
 		self.response = ''
-		self._headers = []
+		self._headers = [		
+                        ('Access-Control-Allow-Origin', '*'),
+                        ('Access-Control-Allow-Headers', 'X-Request, X-Requested-With'),
+                        ('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE, PUT'),
+                        ('Access-Control-Max-Age', '1728000'),
+		]
 		self.environ = environ
 		self.start_response = start_response		
 
