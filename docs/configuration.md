@@ -8,9 +8,15 @@ Example configurations are provided to give you a starting point for configuring
 Format
 ------
 
+The configuration file must always begin with the Defaults header:
+
+[Defaults]
+
+If this is ommitted, the configuration file will fail to parse.
+
 The format of the configuration file is as below:
 
---variable-name = value
+variable-name=value
 
 Comments can be placed by entering a single hash (#) before the start of a line:
 
@@ -93,3 +99,15 @@ The following options are available for configuration:
 
 --server = [tornado|fapws]
   Configures which HTTP service will be used for dealing with requests.
+
+--blocksize = [100]
+  Sets the size of each block of datapoints to be processed.
+
+--tasklimit = [15]
+  The number of active tasks to keep cached in the stacker.
+
+--readmethod = [1|2|3]
+  Sets the task read method:
+    1 = SEQUENTIAL
+    2 = RANDOM
+    3 = SHARED

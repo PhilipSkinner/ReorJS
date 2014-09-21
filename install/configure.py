@@ -61,6 +61,10 @@ def configure():
       'proceed' : False,
       'issues' : [],
     },
+    'documentation' : {
+      'home' : '',
+      'proceed' : True,
+    },
   }
   
   header('ReorJS Daemon Requirements')
@@ -209,6 +213,7 @@ def configure():
     configuration['reorjs']['home'] = '/usr/local/reorjs/reorjsd'
     configuration['cli']['home'] = '/usr/local/reorjs/cli'
     configuration['node']['home'] = '/usr/local/reorjs/nodes'
+    configuration['documentation']['home'] = '/usr/local/reorjs/docs'
   else:
     configuration['reorjs']['proceed'] = False
     configuration['reorjs']['issues'].append('Could not establish default installation location')
@@ -283,6 +288,10 @@ def configure():
       for i in configuration['node']['issues']:
         bad(i)
   
+  warning('\nReorJS Documentation\n')
+  report('Will install', 'Yes')
+  report('Installation directory', configuration['documentation']['home'])  
+  
   yes_no = None
   while yes_no != 'N' and yes_no != 'Y':
     yes_no = raw_input('Continue and create installation scripts? (Y,N) ').upper()
@@ -308,6 +317,12 @@ def configure():
       f.write('python installer.py node "%s"\n' % configuration['node']['home'])
       f.close()
     
+    if configuration['documentation']['proceed']:
+      print "Writing documentation installation script..."
+      f = open('docs.sh', 'w')
+      f.write('python installer.py docs "%s"\n' % configuration['documentation']['home'])
+      f.close()
+    
     print "Writing installation script"
     f = open('install.sh', 'w')
     if configuration['reorjs']['proceed']:
@@ -316,6 +331,8 @@ def configure():
       f.write('sh cli.sh\n')
     if configuration['node']['proceed']:
       f.write('sh node.sh\n')
+    if configuration['documentation']['proceed']:
+      f.write('sh docs.sh\n')
     f.close()
     
     good('\nInstallation scripts created, run "sh install.sh" to complete installation\n')
