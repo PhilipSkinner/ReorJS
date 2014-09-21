@@ -41,7 +41,7 @@ class RedisRemote(base.RemoteConnection):
 
     #gotta love redis
     try:
-      results = self.connection.lrange(self.table, self.cursor, (self.cursor + rows - 1))
+      results = self.connection.lrange(self.table, (self.cursor - 1), (self.cursor + rows - 1))
     except:
       logger.LOG.log("Issue fetching data from redis")
     

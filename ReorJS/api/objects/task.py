@@ -15,6 +15,7 @@ class Task(ObjectBase):
     self.time_started		= self.Column('time_started', int)
     self.time_ended		= self.Column('time_ended', int)
     self.block_size		= self.Column('block_size', int)
+    self.read_cursor		= self.Column('read_cursor', int)
     self.completion_cursor	= self.Column('completion_cursor', int)
   
   def __repr__(self):
@@ -33,5 +34,6 @@ class Task(ObjectBase):
       'time_started'		: self.time_started.value(),
       'time_ended'		: self.time_ended.value(),
       'block_size'		: self.block_size.value(),
+      'read_cursor'		: self.read_cursor.value(),
       'completion_cursor' 	: self.completion_cursor.value(),      
     }

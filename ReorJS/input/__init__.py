@@ -1,5 +1,7 @@
 import stack
 import query.handlers.base
+import traceback
+import sys
 
 class InputService():
   def __init__(self):
@@ -19,8 +21,12 @@ class ReceiveResultHandler(query.handlers.base.BaseHandler):
     if result == None or result == '':
       self.error('5002', 'Missing result for cursor')
       return
-      
-    stack.stacker.receive_result(cursor=cursor, result=result)
+    
+    try:  
+      stack.stacker.receive_result(cursor=cursor, result=result)
+    except Exception, err:
+      print traceback.format_exc()
+      print sys.exc_info()
     
     self.status('200', 'Result received')
     return

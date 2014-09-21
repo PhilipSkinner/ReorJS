@@ -44,3 +44,5 @@ MYSQL_PASSWORD = None
 
 #stacker settings
 BLOCKSIZE = 100
+TASKLIMIT = 15
+READMETHOD = 1

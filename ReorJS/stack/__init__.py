@@ -4,6 +4,8 @@ import logger
 import random
 import operator
 import simplejson as json
+import time
+import settings
 
 SEQUENTIAL = 1
 RANDOM = 2
@@ -13,11 +15,11 @@ stacker = None
 
 def initStacker():
     global stacker
-    stacker = StackManager(4096, method=RANDOM)
+    stacker = StackManager(4096, method=settings.READMETHOD)
     return True
 
 class StackManager(object):
-    def __init__(self, memory, method=SEQUENTIAL):
+    def __init__(self, memory, method=settings.READMETHOD):
       self.stack = collections.deque()
       self.memorylimit = memory
       
@@ -30,12 +32,13 @@ class StackManager(object):
       
       self._datasets = {}
       self._tasks = {}
+      self._taskResultCursors = {}
       self._connections = {}
       
-      self.refreshTasks()
+      self.refreshTasks(initial=True)
       self.refreshDatasets()
           
-    def refreshDatasets(self):
+    def refreshDatasets(self, initial=False):
       #get the datasets for the tasks we have, quickgen an id list
       ids = []
       for i,t in self._tasks.iteritems():
@@ -51,20 +54,31 @@ class StackManager(object):
           dataset = api.db.Dataset.find({ 'id' : i })
           if dataset != None:
             self._datasets[str(dataset.id.value())] = dataset
+      
     
-    def refreshTasks(self):
+    def refreshTasks(self, initial=False):
       #check our existing tasks still exist
+      newT = {}
       for id, t in self._tasks.iteritems():
         temp = api.db.Task.find({ 'id' : id })
-        if temp == None:
-          del self._tasks[id] 
+        if not (temp == None or temp.time_ended.value() != 0):          
+          newT[id] = t
+
+      self._tasks = newT
     
       #get a list of tasks from the database
-      tasks = api.db.Task.search({ },{ 'limit' : 15 })
+      tasks = api.db.Task.search({ 'time_ended' : 0 },{ 'limit' : settings.TASKLIMIT })
       
       for t in tasks:
         if t.id.value() not in self._tasks:
           self._tasks[t.id.value()] = t
+
+      #is it the initilization load? If so, we need to restore the read_cursors back to the completion cursor position
+      if initial:
+        for i, t in self._tasks.iteritems():
+          t.status.value('Stacking')
+          t.read_cursor.value(t.completion_cursor.value())
+          t.update()
     
     def get_connection(self, dataset):
       #do we have a connection for this dataset?
@@ -174,11 +188,13 @@ class StackManager(object):
       
         #we need to fetch some more tasks
         toRead = []
+        
         if self.method == SEQUENTIAL:
           #just grab the first          
-          for i, t in self._tasks.iteritems():
-            toRead.append(t)
-            break
+          for i, t in self._tasks.iteritems():           
+            if t.status.value() in ['Stacking', 'Pending']:
+              toRead.append(t)
+              break
         elif self.method == RANDOM:
           #grab a random one
           toRead.append(random.choice(self._tasks.values()))
@@ -201,18 +217,48 @@ class StackManager(object):
           return None        
           
         #foreach task, read in some data
-        for task in toRead:
+        for task in toRead:                 
           if str(task.dataset_id.value()) in self._datasets:
+            if task.status.value() == 'Pending':
+              task.time_started.value(int(round(time.time() * 1000)))
+              task.status.value('Stacking')
+              task.update()
+          
             dataset = self._datasets[str(task.dataset_id.value())]
             
             connection = self.get_connection(dataset)        
             if connection != None:
               #we can fetch some data
-              data = self._connections[dataset.id.value()].fetch_data(rows=10)
-            
-              for d in data:
-                #cursor is result dataset along with the cursor position in the data read
-                self.add_task({ 'script' : task.program.value(), 'data' : d['data'], 'cursor' : '%s-%s' % (task.result_id.value(), d['cursor']) }) 
+              data = self._connections[dataset.id.value()].fetch_data(rows=task.block_size.value(), cursor=task.read_cursor.value())
+              finished = False
+              
+              if len(data) > 0:
+                for d in data:
+                  #cursor is result dataset along with the cursor position in the data read
+                  self.add_task({ 'script' : task.program.value(), 'data' : d['data'], 'cursor' : '%s-%s-%s' % (task.id.value(), task.result_id.value(), d['cursor']) })                   
+                  task.read_cursor.value(d['cursor'])
+                
+                task.read_cursor.value(task.read_cursor.value() + 1)                
+                task.update()
+                
+                if len(data) < task.block_size.value():
+                  finished = True
+              else:
+                finished = True
+              
+              if finished:
+                #no more data
+                if task.status.value() == 'Stacking':
+                  task.status.value('All data stacked')
+                  task.update()
+            else:
+              task.status.value('Unable to connect to data source')
+              task.time_ended.value(int(round(time.time() * 1000)))
+              task.update()
+          else:
+            task.status.value('Invalid dataset provided')
+            task.time_ended.value(int(round(time.time() * 1000)))
+            task.update()
       try:
         return self.stack.popleft()
       except:
@@ -221,11 +267,25 @@ class StackManager(object):
     def receive_result(self, cursor=None, result=None):
      if cursor == None or cursor == '' or result == None or result == '':
       return False
-     
+      
      #lets see if we can find the dataset for this
      tmp = cursor.split('-')
-     datasetId = tmp[0]
-     cursorId = tmp[1]
+     taskId = tmp[0]
+     datasetId = tmp[1]
+     cursorId = tmp[2]
+     
+     #get our task
+     task = None
+     if taskId not in self._tasks:
+       task = api.db.Task.find({ 'id' : taskId })
+       if task != None:
+        self._tasks[str(task.id.value())] = task
+      
+     if taskId not in self._tasks:
+       #a serious issue
+       return False
+     else:
+       task = self._tasks[taskId]
 
      #get our dataset
      dataset = None
@@ -245,7 +305,54 @@ class StackManager(object):
      
      if connection != None:
        connection.save_result(result=result, cursor=cursorId)
+       
+       #record this cursorId locally
+       if task.id.value() not in self._taskResultCursors:       
+         self._taskResultCursors[task.id.value()] = {
+           'size' : task.block_size.value(),
+           'block_map' : {},
+         }
+       
+       block = int(cursorId) / self._taskResultCursors[task.id.value()]['size']
+       
+       if block not in self._taskResultCursors[task.id.value()]['block_map']:
+         self._taskResultCursors[task.id.value()]['block_map'][block] = 0
+       
+       self._taskResultCursors[task.id.value()]['block_map'][block] += 1
+       
+       max = 0
+       maxBlock = -1
+       #now check every block map and update the completion cursor as required
+       for k, v in self._taskResultCursors[task.id.value()]['block_map'].iteritems():
+         if k > maxBlock:
+           maxBlock = k
+           
+         if v == self._taskResultCursors[task.id.value()]['size']:
+           completedTo = k * v
+           if completedTo > max:
+            max = completedTo
+        
+       task.completion_cursor.value(max)
+       #and calculate the % if applicable
+       if task.status.value() == 'All data stacked':
+         #special case when all data is stacked on the last block
+         if (task.read_cursor.value() - 1) == self._taskResultCursors[task.id.value()]['block_map'][block]:           
+           task.completion_cursor.value(task.read_cursor.value() - 1)
+           max = task.read_cursor.value() - 1
+                             
+         task.progress.value('%.2f%%' % (100 / (task.read_cursor.value() - 1) * task.completion_cursor.value()))         
+       
+       #and is it finished?
+       if max == (task.read_cursor.value() - 1):
+         task.status.value('Complete')
+         task.time_ended.value(int(round(time.time() * 1000)))      
+         self.refreshTasks()
+
+       task.update()       
+     else:
+       task.status('Unable to save result to remote data source')
+       task.time_ended(int(round(time.time() * 1000)))
+       task.update()
+       return False     
      
-     return True     
-      
-          
+     return True
