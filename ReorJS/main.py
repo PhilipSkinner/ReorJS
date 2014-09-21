@@ -14,6 +14,10 @@ def main():
 	set_setting('LOG_LOCATION',		config.log_location)
 	set_setting('DEBUG', 			config.debug)
 	set_setting('VERBOSE', 			config.verbose)
+
+	#init logging
+	logger.initLogger()
+
 	set_setting('REGISTRATION_HOST', 	config.reg_host)
 	set_setting('REGISTRATION_PORT', 	config.reg_port)
 	set_setting('PORT', 			config.port)
@@ -33,9 +37,30 @@ def main():
 	set_setting('MYSQL_PASSWORD',		config.mysql_password)
 	set_setting('HTTP_SERVICE',		config.server)
 
-	logger.initLogger()
 	logger.LOG.log('ReorJS service starting...')
 	logger.LOG.log('Initializing API')
+	logger.LOG.info('Starting with the following settings:')
+	logger.LOG.info('LOG_LOCATION		=> %s' % settings.LOG_LOCATION)
+	logger.LOG.info('DEBUG			=> %s' % settings.DEBUG)
+	logger.LOG.info('VERBOSE			=> %s' % settings.VERBOSE)
+	logger.LOG.info('REGISTRATION_HOST	=> %s' % settings.REGISTRATION_HOST)
+	logger.LOG.info('REGISTRATION_PORT	=> %s' % settings.REGISTRATION_PORT)
+	logger.LOG.info('PORT			=> %s' % settings.PORT)
+	logger.LOG.info('IP			=> %s' % settings.IP)
+	logger.LOG.info('DB_TYPE			=> %s' % settings.DB_TYPE)
+	logger.LOG.info('REDIS_SOCKET		=> %s' % settings.REDIS_SOCKET)
+	logger.LOG.info('REDIS_HOST		=> %s' % settings.REDIS_HOST)
+	logger.LOG.info('REDIS_PORT		=> %s' % settings.REDIS_PORT)
+	logger.LOG.info('MONGO_NAME		=> %s' % settings.MONGO_NAME)
+	logger.LOG.info('MONGO_HOST		=> %s' % settings.MONGO_HOST)
+	logger.LOG.info('MONGO_PORT		=> %s' % settings.MONGO_PORT)
+	logger.LOG.info('MONGO_READ		=> %s' % settings.MONGO_READ)
+	logger.LOG.info('MYSQL_NAME		=> %s' % settings.MYSQL_NAME)
+	logger.LOG.info('MYSQL_HOST		=> %s' % settings.MYSQL_HOST)
+	logger.LOG.info('MYSQL_PORT		=> %s' % settings.MYSQL_PORT)
+	logger.LOG.info('MYSQL_USER		=> %s' % settings.MYSQL_USER)
+	logger.LOG.info('MYSQL_PASSWORD		=> %s' % settings.MYSQL_PASSWORD)
+	logger.LOG.info('HTTP_SERVICE		=> %s' % settings.HTTP_SERVICE)
 	
 	#we need to configure our API database from settings
 	if api.connect():	

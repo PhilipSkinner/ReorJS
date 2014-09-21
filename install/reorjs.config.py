@@ -52,19 +52,20 @@ os.system('cp -rf %s/examples/* %s' % (base, conf))
 
 print "Generating default conf"
 f = open('%s/reorjsd.conf' % conf, 'w')
-f.write('--port = 9999\n')
-f.write('--ip = 127.0.0.1\n')
-f.write('--db-type = %s\n' % db)
+f.write('[Defaults]')
+f.write('port=9999\n')
+f.write('ip=127.0.0.1\n')
+f.write('db-type=%s\n' % db)
 if db == 'mysql':
-  f.write('--mysql-host = localhost\n')
-  f.write('--mysql-port = 3306\n')
-  f.write('--mysql-name = reorjs\n')
-  f.write('--mysql-user = username\n')
-  f.write('--mysql-password = password\n')
+  f.write('mysql-host=localhost\n')
+  f.write('mysql-port=3306\n')
+  f.write('mysql-name=reorjs\n')
+  f.write('mysql-user=username\n')
+  f.write('mysql-password=password\n')
 elif db == 'mongo':
-  f.write('--mongo-host = localhost\n')
-  f.write('--mongo-port = 27017\n')
-f.write('--server = %s\n' % http)
+  f.write('mongo-host=localhost\n')
+  f.write('mongo-port=27017\n')
+f.write('server=%s\n' % http)
 f.close()
 
 print "Generating system startup script"

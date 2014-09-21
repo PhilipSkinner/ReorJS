@@ -3,7 +3,7 @@ import settings
 
 class Logger():
   def __init__(self, logfile, level):
-    logging.basicConfig(filename=logfile,level=level)
+    logging.basicConfig(filename=logfile,level=level,format='%(asctime)-15s - [%(processName)s,%(process)d] - %(message)s')
     logging.info("Started logging")
 
   def critical(self, value):
@@ -27,10 +27,10 @@ def initLogger():
   global LOG
   level = logging.WARNING
   
-  if settings.VERBOSE:
+  if settings.VERBOSE or settings.VERBOSE == "True":
     level = logging.INFO
   
-  if settings.debug:
+  if settings.DEBUG or settings.DEBUG == "True":
     level = logging.DEBUG
   
   LOG = Logger('%s/reorjsd.log' % settings.LOG_LOCATION, level)
