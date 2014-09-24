@@ -82,6 +82,9 @@ for line in r.readlines():
 r.close()
 n.close()
 
+print "Setting permissions"
+os.system('chmod 755 /etc/init.d/reorjsd')
+
 print "Registering service"
 os.system('chkconfig --add reorjsd')
 

@@ -65,7 +65,7 @@ class API():
 				else:
 					if 'error' in data:
 						return { 'error' : data['error'], 'code' : data['meta']['code'] }
-		return None
+		return []
 
 	def detailTask(self, id=None):
 		try:
@@ -80,7 +80,7 @@ class API():
 		except:
 			pass
 			
-		return None
+		return {}
 	
 	def createTask(self, application=None, dataset=None, result=None):
 		try:
@@ -99,7 +99,7 @@ class API():
 		except:
 			pass
 			
-		return None
+		return {}
 
 	def listTasks(self):
 		try:
@@ -114,7 +114,7 @@ class API():
 		except:
 			pass
 			
-		return None
+		return []
 
 	def createDataset(self, name=None, source_type=None, source_hostname=None, source_port=None, source_name=None, source_table=None, source_username=None, source_password=None):
 		try:
@@ -140,7 +140,7 @@ class API():
 		except:
 			pass
 		
-		return None
+		return {}
 
 	def modifyDataset(self, id=None, name=None, source_type=None, source_hostname=None, source_port=None, source_name=None, source_table=None, source_username=None, source_password=None):
 		try:
@@ -166,7 +166,7 @@ class API():
 		except:
 			pass
 		
-		return None
+		return {}
 
 	def deleteDataset(self, id=None):
 		try:
@@ -180,7 +180,7 @@ class API():
 		except:
 			pass
 		
-		return None
+		return {}
 
 	def detailDataset(self, id=None):
 		try:
@@ -195,7 +195,7 @@ class API():
 		except:
 			pass
 			
-		return None
+		return {}
 	
 	def listDatasets(self):
 		try:
@@ -210,7 +210,7 @@ class API():
 		except:
 			pass
 		
-		return None		
+		return []
 	
 	def createApplication(self, name=None, program=None):
 		try:
@@ -230,7 +230,7 @@ class API():
 		except:
 			pass
 		
-		return None
+		return {}
 		
 	def modifyApplication(self, id=None, name=None, program=None):
 		try:
@@ -250,7 +250,7 @@ class API():
 		except:
 			pass
 			
-		return None
+		return {}
 
 	def deleteApplication(self, id=None):
 		try:
@@ -265,7 +265,7 @@ class API():
 		except:
 			pass
 			
-		return None
+		return {}
 
 	def detailApplication(self, id=None):
 		try:
@@ -280,7 +280,7 @@ class API():
 		except:
 			pass
 			
-		return None
+		return {}
 
 	def listApplications(self):
 		#so simple
@@ -296,4 +296,4 @@ class API():
 		except:
 			pass
 			
-		return None
+		return []
