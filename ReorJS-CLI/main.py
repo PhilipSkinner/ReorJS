@@ -419,7 +419,17 @@ class ReorJSCLI(cmd.Cmd):
         cols = [bcolors.HEADER + c + bcolors.ENDC for c in cols]
         table = PrettyTable(cols)
 
-      table.add_row(rec.values())
+      vals = []
+      for v in rec.values():
+        try:
+          if len(v) > 100:
+            v = '%s...' % v[:100]
+        except:
+          pass
+        
+        vals.append(v)
+
+      table.add_row(vals)
       
     print table    
     

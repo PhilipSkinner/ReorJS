@@ -61,7 +61,7 @@ class StackManager(object):
       newT = {}
       for id, t in self._tasks.iteritems():
         temp = api.db.Task.find({ 'id' : id })
-        if not (temp == None or temp.time_ended.value() != 0):          
+        if not (temp == None and temp.time_ended.value() != 0):          
           newT[id] = t
 
       self._tasks = newT

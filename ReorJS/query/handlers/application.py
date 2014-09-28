@@ -22,6 +22,8 @@ class APIApplicationHandler(BaseHandler):
     name = self.get_argument('name', None)
     program = self.get_argument('program', None)
     
+    print program
+    
     if name == None or name.replace(' ', '') == '':
       self.error('1002', 'Application requires a name')
       return
