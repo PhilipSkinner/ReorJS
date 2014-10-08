@@ -48,6 +48,7 @@ def initStacker():
 class StackManager(object):
     def __init__(self, memory, method=settings.READMETHOD):
       self.stack = collections.deque()
+      self.pending = collections.deque()
       self.memorylimit = memory
       
       self.method = method
@@ -61,6 +62,7 @@ class StackManager(object):
       self._tasks = {}
       self._taskResultCursors = {}
       self._connections = {}
+      self._reqCounter = 0
       
       self.refreshTasks(initial=True)
       self.refreshDatasets()
@@ -86,26 +88,29 @@ class StackManager(object):
     def refreshTasks(self, initial=False):
       #check our existing tasks still exist
       newT = {}
+      logger.LOG.debug("Checking tasks")
       for id, t in self._tasks.iteritems():
         temp = api.db.Task.find({ 'id' : id })
-        if not (temp == None and temp.time_ended.value() != 0):          
+        logger.LOG.debug("Checking task %s" % id)
+        if (temp != None and temp.time_ended.value() == 0):
+          logger.LOG.debug("Task is good")
           newT[id] = t
 
       self._tasks = newT
+      logger.LOG.debug("Our tasks have been set")
     
       #get a list of tasks from the database
+      logger.LOG.debug("Searching for new tasks")
       tasks = api.db.Task.search({ 'time_ended' : 0 },{ 'limit' : settings.TASKLIMIT })
       
-      for t in tasks:
+      for t in tasks:      
+        logger.LOG.debug("Checking task %s" % t.id.value())
         if t.id.value() not in self._tasks:
-          self._tasks[t.id.value()] = t
-
-      #is it the initilization load? If so, we need to restore the read_cursors back to the completion cursor position
-      if initial:
-        for i, t in self._tasks.iteritems():
-          t.status.value('Stacking')
+          logger.LOG.debug("Its a new task!")
+          t.status.value('Stacking')          
           t.read_cursor.value(t.completion_cursor.value())
           t.update()
+          self._tasks[t.id.value()] = t
     
     def get_connection(self, dataset):
       #do we have a connection for this dataset?
@@ -184,7 +189,14 @@ class StackManager(object):
       return None    
     
     def add_task(self, task):
-      self.stack.append(task)
+      self.pending.append(task)
+      
+    def release_tasks(self):
+      try:
+        while len(self.pending) > 0:
+          self.stack.append(self.pending.popleft())
+      except:
+        pass
     
     def get_status(self):
       usedmemory = sum([len(x) for x in self.stack])
@@ -196,10 +208,12 @@ class StackManager(object):
         'method' : self.method,        
       }
             
-    def get_task(self):
+    def get_task(self):    
       if len(self.stack) == 0:
+        self._reqCounter += 1
         #check if we need to read in more task and dataset data
-        if len(self._tasks) == 0:
+        if len(self._tasks) == 0 or self._reqCounter > 100:
+          self._reqCounter = 0
           self.refreshTasks()
         if len(self._datasets) == 0:
           self.refreshDatasets()
@@ -262,11 +276,12 @@ class StackManager(object):
               if len(data) > 0:
                 for d in data:
                   #cursor is result dataset along with the cursor position in the data read
-                  self.add_task({ 'script' : task.program.value(), 'data' : d['data'], 'cursor' : '%s-%s-%s' % (task.id.value(), task.result_id.value(), d['cursor']) })                   
+                  self.add_task({ 'script' : task.program.value(), 'data' : d['data'], 'cursor' : '%s-%s-%s' % (task.id.value(), task.result_id.value(), d['cursor']) })
                   task.read_cursor.value(d['cursor'])
-                
-                task.read_cursor.value(task.read_cursor.value() + 1)                
+                               
+                task.read_cursor.value(task.read_cursor.value() + 1)
                 task.update()
+                self.release_tasks()
                 
                 if len(data) < task.block_size.value():
                   finished = True
@@ -335,45 +350,66 @@ class StackManager(object):
        
        #record this cursorId locally
        if task.id.value() not in self._taskResultCursors:       
+         #we record a blockmap, the target blockmap size and the started time so we can re-stack any missing blocks
          self._taskResultCursors[task.id.value()] = {
            'size' : task.block_size.value(),
            'block_map' : {},
          }
        
-       block = int(cursorId) / self._taskResultCursors[task.id.value()]['size']
+       #we calculate the block number from the cursor ID divided by the target block size
+       block = (int(cursorId) - 1) / self._taskResultCursors[task.id.value()]['size'] #corrected as we start at zero folks :)
+       logger.LOG.debug("Cursor %s is in block %s" % (cursorId, block))
        
+       #if the block is not within the blockmap then we need to create the value
        if block not in self._taskResultCursors[task.id.value()]['block_map']:
-         self._taskResultCursors[task.id.value()]['block_map'][block] = 0
+         self._taskResultCursors[task.id.value()]['block_map'][block] = { 'completed' : 0, 'started' : time.time() }
        
-       self._taskResultCursors[task.id.value()]['block_map'][block] += 1
+       #record a completed task within the blockmap
+       #when we reach a blockmap size for the completed value, the block is finished
+       self._taskResultCursors[task.id.value()]['block_map'][block]['completed'] += 1
        
        max = 0
        maxBlock = -1
        #now check every block map and update the completion cursor as required
        for k, v in self._taskResultCursors[task.id.value()]['block_map'].iteritems():
+         #determine the maxblock we have seen so far
          if k > maxBlock:
            maxBlock = k
-           
-         if v == self._taskResultCursors[task.id.value()]['size']:
-           completedTo = k * v
+          
+         #if the number of completed items equals the blockmaps size         
+         if v['completed'] == self._taskResultCursors[task.id.value()]['size'] and k == maxBlock:
+           #we advance the cursor
+           completedTo = (k + 1) * v['completed']
+           logger.LOG.debug("We have completed %s so far" % completedTo)
+       
+           #and if the cursor is greater than our max we increase it
            if completedTo > max:
             max = completedTo
-        
+
+       logger.LOG.debug(self._taskResultCursors[task.id.value()]['block_map'])
+       #we save our completion cursor for the task
        task.completion_cursor.value(max)
        #and calculate the % if applicable
-       if task.status.value() == 'All data stacked':
-         #special case when all data is stacked on the last block
-         if (task.read_cursor.value() - 1) == self._taskResultCursors[task.id.value()]['block_map'][block]:           
+
+       #special case when all data is stacked on the last block     
+       if task.status.value() == 'All data stacked':       
+         logger.LOG.debug("Checking last target of %s against %s" % ((task.read_cursor.value() - 1), self._taskResultCursors[task.id.value()]['block_map'][block]['completed']))
+         if (task.read_cursor.value() - 1) == (self._taskResultCursors[task.id.value()]['block_map'][block]['completed'] + (block * self._taskResultCursors[task.id.value()]['size'])):
+           #we set the completion cursor for the task
            task.completion_cursor.value(task.read_cursor.value() - 1)
+           #reset the max
            max = task.read_cursor.value() - 1
-                             
-         task.progress.value('%.2f%%' % (100 / (task.read_cursor.value() - 1) * task.completion_cursor.value()))         
-       
-       #and is it finished?
-       if max == (task.read_cursor.value() - 1):
-         task.status.value('Complete')
-         task.time_ended.value(int(round(time.time() * 1000)))      
-         self.refreshTasks()
+         
+         #and is it finished?
+         if max == (task.read_cursor.value() - 1):
+           #our task is completed
+           task.status.value('Complete')
+           task.read_cursor.value(task.completion_cursor.value())
+           task.time_ended.value(int(round(time.time() * 1000)))      
+           self.refreshTasks()
+
+       logger.LOG.debug("Setting task progress to %.2f%%" % (float(100) / float((task.read_cursor.value() - 1)) * float(task.completion_cursor.value())))
+       task.progress.value('%.2f%%' % (float(100) / float(task.read_cursor.value() - 1) * float(task.completion_cursor.value())))                
 
        task.update()       
      else:

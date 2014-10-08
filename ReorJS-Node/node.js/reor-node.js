@@ -37,6 +37,8 @@ var SETTINGS = {
 	port		: '9999',
 	scan		: 15000,
 	distributor	: null,
+	timeout		: 100,
+	fetchqueue	: 1,
 };
 
 var http = require('http')
@@ -84,15 +86,14 @@ function readQueue() {
 
 				// we got some data, so we try and do some more right way
 				//		readQueue();
-				setTimeout(readQueue, 5000);
+				setTimeout(readQueue, SETTINGS.timeout);
 			}
 		}
 	}
 	
 	if (!valid) {
 		// nothing in the queue, check again in a second
-		console.log('Read queue is empty')
-		setTimeout(readQueue, 5000);
+		setTimeout(readQueue, SETTINGS.timeout);
 	}
 }
 
@@ -127,9 +128,9 @@ function sendMessage() {
 		// post the data
 		post_req.write(post_data);
 		post_req.end();
-		setTimeout(sendMessage, 1);
+		setTimeout(sendMessage, SETTINGS.timeout);
 	} else {
-		setTimeout(sendMessage, 10);
+		setTimeout(sendMessage, SETTINGS.timeout);
 	}
 }
 
@@ -161,7 +162,7 @@ var _getFailHandler = function() {
 }
 
 function main() {
-	if (getCounter < 1000) {
+	if (getCounter < SETTINGS.fetchqueue) {
 		var req = http.get('http://' + SETTINGS.distributor + ':' +  SETTINGS.port + '/output/v1/task', _getHandler);
 		req.on('error', _getFailHandler);
 		getCounter++;
@@ -169,7 +170,7 @@ function main() {
 		getTimeout = 10;
 	}
 
-	setTimeout(main, getTimeout);
+	setTimeout(main, SETTINGS.timeout);
 }
 
 function doScan() {
@@ -198,8 +199,11 @@ function doScan() {
 			}
 		});
 	}
-
+	
 	console.log("Scanning IP range", range[0], range[range.length - 1]);
+
+	//and add in our localhost to fix any networking stuff
+	range.push('127.0.0.1');
 
 	var options = {
 		ips : range,

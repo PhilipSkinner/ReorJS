@@ -3,7 +3,8 @@
 	ReorJSd API Task Object
         
         --
-	Provides a description of the Task API object.
+	Provides a description of the Task API object and the TaskBlock object for
+	recording result blockmaps.
         --
         
         Author(s)       - Philip Skinner (philip@crowdca.lc)
@@ -63,4 +64,30 @@ class Task(ObjectBase):
       'block_size'		: self.block_size.value(),
       'read_cursor'		: self.read_cursor.value(),
       'completion_cursor' 	: self.completion_cursor.value(),      
+    }
+
+class TaskBlock(ObjectBase):
+  __tablename__ = 'task_block'
+  
+  def __initattributes__(self):
+    self.id			= self.Column('id', int, primary_key=True)
+    self.task_id		= self.Column('task_id', int)
+    self.cursor_start		= self.Column('cursor_start', int)
+    self.cursor_end		= self.Column('cursor_end', int)
+    self.started		= self.Column('started', str)
+    self.completed		= self.Column('completed', str)
+    self.status			= self.Column('status', str)
+    
+  def __repr__(self):
+    return "<TaskBlock('%s', Task('%s'))>" % (self.id, self.task_id)
+    
+  def to_serializable_object(self):
+    return {
+      'id'			: str(self.id.value()),
+      'task'			: str(self.task_id.value()),
+      'cursor_start'		: str(self.cursor_start.value()),      
+      'cursor_end'		: str(self.cursor_end.value()),
+      'started'			: self.started.value(),
+      'completed'		: self.completed.value(),
+      'status'			: self.status.value(),
     }
