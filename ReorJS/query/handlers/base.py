@@ -70,8 +70,8 @@ class BaseHandler():
     self.jsonp({ 'meta' : { 'code' : code }, 'error' : { 'message' : message } })
     return
   
-  def status(self, code, message):
-    self.jsonp({ 'meta' : { 'code' : code}, 'status' : { 'message' : message } })
+  def status(self, code, message, id=None):
+    self.jsonp({ 'meta' : { 'code' : code}, 'status' : { 'message' : message }, 'id' : id })
     return
                     
   def get(self):

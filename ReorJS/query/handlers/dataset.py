@@ -70,7 +70,7 @@ class APIDataSetHandler(BaseHandler):
                                         'source_table' 		: source_table })
       dataset.update()
       
-      self.status('200', 'Dataset successfully created')
+      self.status('200', 'Dataset successfully created', dataset.id.value())
       return
     else:
       dataset = api.db.Dataset.find({ 'id' : id })
@@ -89,7 +89,7 @@ class APIDataSetHandler(BaseHandler):
       dataset.source_table.value(source_table)
       dataset.update()
       
-      self.status('200', 'Dataset %s updated successfully' % id)
+      self.status('200', 'Dataset %s updated successfully' % id, id)
       return
   
   def put(self, id=None):
