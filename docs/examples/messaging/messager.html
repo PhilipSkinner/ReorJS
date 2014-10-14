@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
+		<!-- yes its in the head, so kill me -->
+		<style>
+			.chatBox {
+				position: fixed;
+				top: 0px;
+				left: 0px;
+				bottom: 0px;
+				right: 0px;
+			}
+			
+			.messages {
+				position: absolute;
+				top: 5px;
+				left: 5px;
+				right: 5px;
+				bottom: 55px;
+				border: 1px solid rgba(0,0,0,0.9);
+				overflow: hidden;
+			}
+			
+			#messages {
+				position: absolute;
+				left: 0px;
+				right: 0px;
+				bottom: 0px;
+			}
+			
+			.form {
+				position: absolute;
+				bottom: 5px;
+				left: 5px;
+				right: 5px;
+				height: 43px;
+				border: 1px solid rgba(0,0,0,0.9);
+			}
+			
+			#toSend {
+				display: block;
+				position: absolute;
+				top: 5px;
+				bottom: 5px;
+				width: auto;
+				right: 120px;
+				left: 5px;
+				width: 95%;
+			}
+			
+			#sendButton {
+				position: absolute;
+				top: 5px;
+				right: 5px;
+				bottom: 5px;
+				width: 110px;
+			}
+			
+			.message {
+				margin: 5px;
+				padding: 5px 0px;
+				border-bottom: 1px solid rgba(0,0,0,0.5);
+			}
+			
+			.message .from {
+				display: inline-block;
+				padding-right: 5px;
+				font-weight: bold;~
+			}
+		</style>
+	</head>
+	<body>
+		<div class="chatBox">
+			<div class="messages">
+				<div id="messages"></div>
+			</div>
+			<div class="form">
+				<form action="#" method="POST" onsubmit="return sendMessage();">
+					<input type="text" name="message" id="toSend">
+					<input type="submit" value="Send" id="sendButton">
+				</form>
+			</div>
+		</div>
+		<script>
+			var chunkSize = 5;
+			var apiIP = '127.0.0.1';
+			var messages = {};
+		
+			function sendMessage() {
+				var messageID = Math.ceil(Math.random() * 1000000);
+			
+				var message = $('#toSend').val();
+				$('#toSend').val('');
+				
+				addMessage('Me', '#FF0000', message);
+				
+				//now lets send it in pieces
+				var chunks = message.match(/.{1,5}/g);				
+				
+				for (var i = 0; i < chunks.length; i++) {
+					//and identify
+					chunks[i] = messageID + '-' + i + '-' + chunks.length + '-@@' + chunks[i] + '@@';
+				}		
+				console.log(chunks);
+				
+				//send it to our PHP script
+								
+				
+				return false;
+			}
+			
+			function addMessage(from, colour, message) {
+				$('#messages').append('<div class="message" style="color: ' + colour + ';"><span class="from">' + from + '</span><span class="content">' + message + '</span></div>');
+			}
+			
+			function pollMessages() {
+				//poll our PHP script
+			}
+			
+			function recreateMessage(parts) {
+				for (var i = 0; i < parts.length; i++) {
+					var segments = parts[i].split('@@');
+					var identifiers = segments[0].split('-');
+					
+					if (!messages[identifiers[0]]) {
+						messages[identifiers[0]] = {
+							count : 0,
+							target : 0,
+						};
+					}
+					
+					messages[identifiers[0]][identifiers[1]] = segments[1];
+					messages[identifiers[0]]['target'] = identifiers[2];
+					messages[identifiers[0]]['count']++;
+				}
+				
+				//now check all messages to see if we have all the parts
+				for (var key in messages) {					
+					var m = messages[key];
+					
+					if (m && m['count'] == m['target']) {
+						//we have a complete message, lets create it
+						var message = '';
+						for (var i = 0; i < m['count']; i++) {
+							message += m[''+i];
+						}			
+						
+						addMessage('Friend', '#0000FF', message);			
+						
+						messages[key] = null;
+					}
+				}
+			}
+		</script>
+	</body>	
+</html>
+
+
