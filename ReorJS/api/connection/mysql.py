@@ -98,6 +98,7 @@ class Connection(ConnectionBase):
         query = "DROP TABLE %s" % object.__tablename__
         cursor = self.connection().cursor()
         cursor.execute(query)
+        self.connection().commit()
         cursor.close()
       else:
         logger.LOG.log("Structure looks good!")
@@ -117,6 +118,7 @@ class Connection(ConnectionBase):
                                 
       cursor = self.connection().cursor()
       cursor.execute(query)
+      self.connection().commit()
       cursor.close()
   
   def search(self, object, params={}, options={}):
@@ -164,6 +166,7 @@ class Connection(ConnectionBase):
       
       toReturn.append(obj)
 
+    self.connection().commit()
     cursor.close()
     return toReturn              
 
