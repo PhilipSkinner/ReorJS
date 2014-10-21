@@ -121,9 +121,6 @@ class JSTextEditor(npyscreen.MultiLineEdit):
   def tab(self, what):
     self.insert_value("  ")
   
-  def debug_message(self, what): 
-    self.insert_value("cheese")
-
   def insert_value(self, value):
     value = str(value)
   
@@ -131,27 +128,111 @@ class JSTextEditor(npyscreen.MultiLineEdit):
       self.value = self.value[:self.cursor_position] + value + self.value[self.cursor_position:]
     
     self.cursor_position += len(value)   
+
+class EditorApp(npyscreen.NPSAppManaged):
+  _THISFORM = None
+  editor = None
+  runEnviron = None
+
+  def onStart(self):
+    self.editor 	= self.addForm("MAIN",		Editor, name="Editor", color="IMPORTANT")
+    self.runEnviron 	= self.addForm("RUNENVIRON",	RunEnvironment, name="Run Environment", color="WARNING")
+    self.testData	= self.addForm("TESTDATA",	TestDataForm, name="Test Data Form", color="WARNING")
+    
+  def onCleanExit(self):
+    npyscreen.notify_wait("Goodbye!")
+    
+  def change_form(self, name):      
+    self.switchForm(name)
+    self.resetHistory()
+
+class MainForm(npyscreen.ActionForm):
+    def create(self):
+      return
+
+    def on_ok(self):
+      # Exit the application if the OK button is pressed.
+      self.parentApp.switchForm(None)
+
+    def displayRun(self):
+      self.parentApp.change_form("RUNENVIRON")
   
-class Editor(npyscreen.NPSApp):
+    def displayEditor(self):
+      self.parentApp.change_form("EDITOR")    
+    
+    def displayTestDataForm(self):
+      self.parentApp.change_form("TESTDATA")
+
+    def change_forms(self, *args, **keywords):
+        if self.name == "Editor":
+            change_to = "MAIN"
+        elif self.name == "Run Environment":
+            change_to = "RUNENVIRON"
+
+        # Tell the MyTestApp object to change forms.
+        self.parentApp.change_form(change_to)
+                                                                                                                                          
+class Editor(MainForm):
   value = """function(id, data) {\n\treturn {};\n}""".replace('\t', '    ')
 
-  def main(self):
-    self.editorForm  = npyscreen.Form(name = "Editing %s" % ("myfile.js"))
-    self.editor = self.editorForm.add(JSTextEditor,
+  def create(self):
+    self.editor = self.add(JSTextEditor,
                              value = self.value,
-                             rely=2)
+                             rely=2,
+                             color="NORMAL")
+                             
     self.editor.manager = self
-    self.editorForm.edit()
+
+class TestDataForm(MainForm):
+  value = """{ 'hello' : 'world' }"""
   
-  def displayRun(self):
-    self.value = self.editor.value
-    self.runForm = npyscreen.Form(name = "Running %s" % ("myfile.js"))
+  def create(self):
+    self.editor = self.add(JSTextEditor,
+                            value = self.value,
+                            rely =2,
+                            color="NORMAL")
     
-    t  = self.runForm.add(npyscreen.TitleText, name = "Text:",)
+    self.editor.manager = self
+
+  def on_ok(self):
+    self.parentApp.runEnviron.addValue(self.editor.value)
+    self.parentApp.change_form("RUNENVIRON")
+
+class TestDataList(npyscreen.MultiLineAction):
+  def __init__(self, *args, **keywords):
+    super(TestDataList, self).__init__(*args, **keywords)
+    self.add_handlers({
+      "^A": self.add_record,
+      "^D": self.delete_record
+    })
+
+  def display_value(self, vl):
+    return vl
+
+  def actionHighlighted(self, act_on_this, keypress):
+    return
     
-    self.runForm.display()
-    
-    
-    
-ed = Editor()
+  def add_record(self, *args, **keywords):
+    self.parent.parentApp.change_form("TESTDATA")
+
+  def delete_record(self, *args, **keywords):
+    return    
+
+class RunEnvironment(MainForm):
+  MAIN_WIDGET_CLASS = TestDataList
+
+  def create(self):
+    self.wMain = self.add(TestDataList)    
+
+  def beforeEditing(self):
+      self.update_list()
+
+  def addValue(self, value):
+    self.wMain.values.append(value)
+    self.update_list()
+
+  def update_list(self):
+      self.wMain.display()
+
+ed = EditorApp()
 ed.run()
