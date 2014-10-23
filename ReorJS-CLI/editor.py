@@ -37,7 +37,7 @@ class JSTextEditor(npyscreen.MultiLineEdit):
           self.cursor_position += 1        
 
   def handle_exit(self, what):
-    self.h_exit_down(what)    
+    self.h_exit_escape(what)    
     return
   
   def is_exit(self, inp):  
@@ -135,9 +135,9 @@ class EditorApp(npyscreen.NPSAppManaged):
   runEnviron = None
 
   def onStart(self):
-    self.editor 	= self.addForm("MAIN",		Editor, name="Editor", color="IMPORTANT")
-    self.runEnviron 	= self.addForm("RUNENVIRON",	RunEnvironment, name="Run Environment", color="WARNING")
-    self.testData	= self.addForm("TESTDATA",	TestDataForm, name="Test Data Form", color="WARNING")
+    self.editor 	= self.addForm("MAIN",		Editor, name="Editor", color="DEFAULT")
+    self.runEnviron 	= self.addForm("RUNENVIRON",	RunEnvironment, name="Run Environment", color="DEFAULT")
+    self.testData	= self.addForm("TESTDATA",	TestDataForm, name="Test Data Form", color="DEFAULT")
     
   def onCleanExit(self):
     npyscreen.notify_wait("Goodbye!")
@@ -171,16 +171,36 @@ class MainForm(npyscreen.ActionForm):
 
         # Tell the MyTestApp object to change forms.
         self.parentApp.change_form(change_to)
-                                                                                                                                          
+    
+    
+    def createInstructions(self, instructions):    
+      gd = self.add(npyscreen.GridColTitles, relx = 2, rely=2, height=1, col_titles = instructions)
+      gd._is_editable = False
+      gd.editable = False
+      gd.handlers = {
+        '^P':     		self.h_exit_up,
+	'^N':     		self.h_exit_up,
+	curses.KEY_UP:      	self.h_exit_up,
+        curses.KEY_LEFT:    	self.h_exit_up,
+        curses.KEY_DOWN:    	self.h_exit_up,
+        curses.KEY_RIGHT:  	self.h_exit_up,
+      }
+
 class Editor(MainForm):
   value = """function(id, data) {\n\treturn {};\n}""".replace('\t', '    ')
 
   def create(self):
     self.editor = self.add(JSTextEditor,
                              value = self.value,
-                             rely=2,
-                             color="NORMAL")
-                             
+                             rely=4,
+                             color="DEFAULT")    
+
+    self.createInstructions([
+      '^E : Enter testing suite',
+      '^O : Save to ReorJSd',
+      '^X : Exit Editor',
+    ])                             
+
     self.editor.manager = self
 
 class TestDataForm(MainForm):
@@ -189,9 +209,13 @@ class TestDataForm(MainForm):
   def create(self):
     self.editor = self.add(JSTextEditor,
                             value = self.value,
-                            rely =2,
-                            color="NORMAL")
-    
+                            rely =4,
+                            color="DEFAULT")
+
+    self.createInstructions([
+      '^X : Exit Editor'
+    ])
+                                
     self.editor.manager = self
 
   def on_ok(self):
@@ -204,7 +228,7 @@ class TestDataList(npyscreen.MultiLineAction):
     self.add_handlers({
       "^A": self.add_record,
       "^D": self.delete_record
-    })
+    })        
 
   def display_value(self, vl):
     return vl
@@ -222,8 +246,15 @@ class RunEnvironment(MainForm):
   MAIN_WIDGET_CLASS = TestDataList
 
   def create(self):
-    self.wMain = self.add(TestDataList)    
+    self.wMain = self.add(TestDataList, rely=4)
 
+    self.createInstructions([
+      '^A : Add test data',
+      '^M : Modify test data',
+      '^D : Remove test data',
+      '^E : Execute application',
+    ])
+    
   def beforeEditing(self):
       self.update_list()
 
