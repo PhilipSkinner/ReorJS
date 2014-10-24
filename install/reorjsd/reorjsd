@@ -1,0 +1,91 @@
+#!/bin/sh
+#
+# reorjs: Run the ReorJS compute server
+#
+# chkconfig: 35 90 12
+# description: Starts the ReorJS compute server
+
+# Author(s)       - Philip Skinner (philip@crowdca.lc)
+# Last modified   - 2014-09-28
+#        
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#           
+# This program is distributed in the hope that it will be useful,     
+# but WITHOUT ANY WARRANTY; without even the implied warranty of       
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#                 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#          
+# Copyright (c) 2014, Crowdcalc B.V.
+
+### BEGIN INIT INFO
+# Provides:          reorjs
+### END INIT INFO
+
+if [ `id -u` -ne 0 ]; then
+	echo "You need root privileges to run this script."
+	exit 1
+fi
+
+# Source function library.
+. /lib/lsb/init-functions
+
+dir=''
+exec="python main.py"
+prog="reorjs"
+lockfile=/var/lock/subsys/$prog
+pid=0
+
+start() {
+    echo -n $"Starting $prog: "
+    if kill -0 $(cat $lockfile) > /dev/null 2>&1; then
+    	failure $"Starting $prog"
+    	return 0
+    fi
+    
+    cd $dir
+    $exec &
+    pid=$!
+    log_success_msg $"Starting $prog"
+    touch $lockfile
+    echo $pid > $lockfile
+    return 0
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    if kill -0 $(cat $lockfile) > /dev/null 2>&1; then    
+	kill $(cat $lockfile)
+	log_success_msg $"Stopping $prog"
+    	return 0
+    fi
+    log_failure_msg $"Stopping $prog"
+    return 0
+}
+
+restart() {
+    stop
+    start
+}
+
+case "$1" in
+    start)
+        $1
+        ;;
+    stop)
+        $1
+        ;;
+    restart)
+        $1
+        ;;
+    *)
+        echo $"Usage: $0
+{start|stop|restart}"
+        exit 2
+esac
+exit $?

@@ -7,19 +7,46 @@ case "$1" in
 		# first step, clean up any temporary files we don't want
 		echo 'Cleaning environment...'
 		find . -name "*~" -type f -delete
-		rm -rf install/reorjsd.sh
-		rm -rf install/cli.sh
-		rm -rf install/node.sh
-		rm -rf install/docs.sh
-		rm -rf install/install.sh
 
-		#now create our version director
+		#the all package
+		rm -rf install/all/reorjsd.sh
+		rm -rf install/all/cli.sh
+		rm -rf install/all/node.sh
+		rm -rf install/all/docs.sh
+		rm -rf install/all/install.sh
+
+		#the reorjsd package
+		rm -rf install/reorjsd/reorjsd.sh
+		rm -rf install/reorjsd/cli.sh
+		rm -rf install/reorjsd/node.sh
+		rm -rf install/reorjsd/docs.sh
+		rm -rf install/reorjsd/install.sh
+		
+		#the cli package
+		rm -rf install/reorjs-cli/reorjsd.sh
+		rm -rf install/reorjs-cli/cli.sh
+		rm -rf install/reorjs-cli/node.sh
+		rm -rf install/reorjs-cli/docs.sh
+		rm -rf install/reorjs-cli/install.sh
+		
+		#the node package
+		rm -rf install/reorjs-node/reorjsd.sh
+		rm -rf install/reorjs-node/cli.sh
+		rm -rf install/reorjs-node/node.sh
+		rm -rf install/reorjs-node/docs.sh
+		rm -rf install/reorjs-node/install.sh
+	
+		##
+		# create our all package
+		##
+	
+		#now create our version directory
 		echo 'Creating package folder'
 		mkdir "packages/reorjs-$2"
 
 		#and copy our stuff over
 		echo 'Copying version'
-		cp -r -L install/* "packages/reorjs-$2"
+		cp -r -L install/all/* "packages/reorjs-$2"
 
 		#and finally, tarball is
 		echo 'Tarballing package'
@@ -30,6 +57,72 @@ case "$1" in
 		echo "Removing copy"
 
 		cd ../ && rm -rf "packages/reorjs-$2"
+
+		##
+		# create our reorjs package
+		##
+	
+		#now create our version directory
+		echo 'Creating package folder'
+		mkdir "packages/reorjsd-$2"
+
+		#and copy our stuff over
+		echo 'Copying version'
+		cp -r -L install/reorjsd/* "packages/reorjsd-$2"
+
+		#and finally, tarball is
+		echo 'Tarballing package'
+		cd packages && tar -czf "reorjsd-$2.tar.gz" "reorjsd-$2"
+
+		echo "Package reorjsd-$2 created!"
+		
+		echo "Removing copy"
+
+		cd ../ && rm -rf "packages/reorjsd-$2"
+
+		##
+		# create our reorjs-cli package
+		##
+	
+		#now create our version directory
+		echo 'Creating package folder'
+		mkdir "packages/reorjs-cli-$2"
+
+		#and copy our stuff over
+		echo 'Copying version'
+		cp -r -L install/reorjs-cli/* "packages/reorjs-cli-$2"
+
+		#and finally, tarball is
+		echo 'Tarballing package'
+		cd packages && tar -czf "reorjs-cli-$2.tar.gz" "reorjs-cli-$2"
+
+		echo "Package reorjs-cli-$2 created!"
+		
+		echo "Removing copy"
+
+		cd ../ && rm -rf "packages/reorjs-cli-$2"
+
+		##
+		# create our reorjs-node package
+		##
+	
+		#now create our version directory
+		echo 'Creating package folder'
+		mkdir "packages/reorjs-node-$2"
+
+		#and copy our stuff over
+		echo 'Copying version'
+		cp -r -L install/reorjs-node/* "packages/reorjs-node-$2"
+
+		#and finally, tarball is
+		echo 'Tarballing package'
+		cd packages && tar -czf "reorjs-node-$2.tar.gz" "reorjs-node-$2"
+
+		echo "Package reorjs-node-$2 created!"
+		
+		echo "Removing copy"
+
+		cd ../ && rm -rf "packages/reorjs-node-$2"
 
 		echo "Build completed"
 	        ;; 
