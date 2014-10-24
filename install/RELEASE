@@ -1,4 +1,11 @@
-== 0.0.1 ==
+== 0.0.1RC2 ==
+
+* Updated release candidate
+	- Ensured stacking system was more stable
+	- Fixed a number of data persistance issues
+	- Initial docs and examples
+
+== 0.0.1RC1 ==
 
 * First version of open source crowdcalc platform, rebranded to ReorJS
 	- Cutdown version of the API

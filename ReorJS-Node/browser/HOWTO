@@ -1,0 +1,42 @@
+== Browser client how-to ==
+
+The browser client allows you to salvage CPU cycles from visitors on your
+own website.
+
+== How to configure ==
+
+To get up and running straight away simply change the _domain attribute
+inside the reor.js script to be the domain and port your are running your
+ReorJSd service on, for example:
+
+http://reorjs.com:9999
+
+You can also specify the timeout (_timeout) between tasks being processed. This value
+is in milliseconds. Please ensure that the timeout your set is not too small
+and causes your users computers to slow down - remember they are giving you
+something for nothing.
+
+The _maxError attribute allows you to specify the maximum number of errors
+communicating with the ReorJSd service. Once this number of errors has been
+reached the script will no longer be called.
+
+== How to embed ==
+
+In order to ensure the best security for your users, it is best to include
+the reorjs.html file inside an iframe:
+
+<iframe src="http://yourwebsite.com/reorjs/reorjs.html" style="border: 0px;
+margin: 0px; padding: 0px; width: 0px; height: 0px;"></iframe>
+
+You can just embed the script straight into your website:
+
+<script type="text/javascript" src="/reor.js"></script>
+
+; though this is not recommended as other scripts on your page can influence
+the reorjs browser client.
+
+== Notification ==
+
+You should notify your users that you are using ReorJS to process tasks on
+their computers. We recommend including a small notification or graphic in
+the footer of your website.

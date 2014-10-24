@@ -1,6 +1,35 @@
 /*
-	ReorJS Node.js Client
-	Version 0.0.1
+ * ReorJS Node.js Node v1.0.0
+ * Author(s): Philip Skinner
+ * Last modified: 2014-09-28
+ *
+ * --
+ * ReorJS node.js compute node with network discovery.
+ *
+ * This program includes a number of third party modules.
+ *
+ * These modules have been chosen to ensure that this code will run
+ * correctly on multiple platforms.
+ *
+ * You can delete the scan directory and attempt to install these
+ * modules manually, but we recommend to just copy the directory
+ * along with this module.
+ * --
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,     
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of      
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (c) 2014, Crowdcalc B.V.                                                                                                                      
 */
 
 var SETTINGS = {
@@ -8,6 +37,8 @@ var SETTINGS = {
 	port		: '9999',
 	scan		: 15000,
 	distributor	: null,
+	timeout		: 100,
+	fetchqueue	: 1,
 };
 
 var http = require('http')
@@ -39,7 +70,7 @@ function readQueue() {
 						_compute.parsed.data.script = _compute.parsed.data.script.replace("\\n", "\n").replace('\\r', '\n').replace('\\t', '\r');
 					}
 					
-					_compute.result = eval('(' + _compute.parsed.data.script + ')')(_compute.parsed.data.id, _compute.parsed.data.data);
+					_compute.result = eval('(' + _compute.parsed.data.script + ')')(_compute.parsed.data.cursor, _compute.parsed.data.data);
 				} catch(e) {
 					console.log("Error in script", _compute.parsed.data.script);
 					console.log(e);
@@ -55,15 +86,14 @@ function readQueue() {
 
 				// we got some data, so we try and do some more right way
 				//		readQueue();
-				setTimeout(readQueue, 5000);
+				setTimeout(readQueue, SETTINGS.timeout);
 			}
 		}
 	}
 	
 	if (!valid) {
 		// nothing in the queue, check again in a second
-		console.log('Read queue is empty')
-		setTimeout(readQueue, 5000);
+		setTimeout(readQueue, SETTINGS.timeout);
 	}
 }
 
@@ -98,9 +128,9 @@ function sendMessage() {
 		// post the data
 		post_req.write(post_data);
 		post_req.end();
-		setTimeout(sendMessage, 1);
+		setTimeout(sendMessage, SETTINGS.timeout);
 	} else {
-		setTimeout(sendMessage, 10);
+		setTimeout(sendMessage, SETTINGS.timeout);
 	}
 }
 
@@ -132,15 +162,15 @@ var _getFailHandler = function() {
 }
 
 function main() {
-	if (getCounter < 1000) {
-		var req = http.get('http://' + SETTINGS.distributor + ':' +  SETTINGS.port + '/output/v1/task?clientid=5', _getHandler);
+	if (getCounter < SETTINGS.fetchqueue) {
+		var req = http.get('http://' + SETTINGS.distributor + ':' +  SETTINGS.port + '/output/v1/task', _getHandler);
 		req.on('error', _getFailHandler);
 		getCounter++;
 	} else {
 		getTimeout = 10;
 	}
 
-	setTimeout(main, getTimeout);
+	setTimeout(main, SETTINGS.timeout);
 }
 
 function doScan() {
@@ -169,8 +199,11 @@ function doScan() {
 			}
 		});
 	}
-
+	
 	console.log("Scanning IP range", range[0], range[range.length - 1]);
+
+	//and add in our localhost to fix any networking stuff
+	range.push('127.0.0.1');
 
 	var options = {
 		ips : range,

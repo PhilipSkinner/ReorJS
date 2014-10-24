@@ -6,7 +6,7 @@
 # description: Starts the ReorJS compute server
 
 # Author(s)       - Philip Skinner (philip@crowdca.lc)
-# Last modified   - 2014-08-31
+# Last modified   - 2014-09-28
 #        
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,8 +27,13 @@
 # Provides:          reorjs
 ### END INIT INFO
 
+if [ `id -u` -ne 0 ]; then
+	echo "You need root privileges to run this script."
+	exit 1
+fi
+
 # Source function library.
-. /etc/rc.d/init.d/functions
+. /lib/lsb/init-functions
 
 dir=''
 exec="python main.py"
@@ -40,17 +45,15 @@ start() {
     echo -n $"Starting $prog: "
     if kill -0 $(cat $lockfile) > /dev/null 2>&1; then
     	failure $"Starting $prog"
-    	echo
     	return 0
     fi
     
     cd $dir
     $exec &
     pid=$!
-    success $"Starting $prog"
+    log_success_msg $"Starting $prog"
     touch $lockfile
     echo $pid > $lockfile
-    echo
     return 0
 }
 
@@ -58,12 +61,10 @@ stop() {
     echo -n $"Stopping $prog: "
     if kill -0 $(cat $lockfile) > /dev/null 2>&1; then    
 	kill $(cat $lockfile)
-	success $"Stopping $prog"
-        echo
+	log_success_msg $"Stopping $prog"
     	return 0
     fi
-    failure $"Stopping $prog"
-    echo
+    log_failure_msg $"Stopping $prog"
     return 0
 }
 
