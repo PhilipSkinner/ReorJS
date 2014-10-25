@@ -48,6 +48,9 @@ PORT = None
 IP = None
 HTTP_SERVICE = None
 
+#authentication values
+ROOT_KEY = None
+
 #database type
 DB_TYPE = None
 

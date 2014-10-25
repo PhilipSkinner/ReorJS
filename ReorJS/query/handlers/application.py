@@ -30,6 +30,10 @@ import api
 
 class APIApplicationHandler(BaseHandler):
   def get(self, id=None):
+    if not self.checkCredentials(self.get_argument('key', None)):
+      self.error('9001', 'Invalid API key')
+      return
+  
     if id == None or id == '':
       results = api.db.Application.search({})
       
@@ -46,6 +50,10 @@ class APIApplicationHandler(BaseHandler):
       return
     
   def post(self, id=None):
+    if not self.checkCredentials(self.get_argument('key', None)):
+      self.error('9001', 'Invalid API key')
+      return
+
     name = self.get_argument('name', None)
     program = self.get_argument('program', None)
     
@@ -78,6 +86,10 @@ class APIApplicationHandler(BaseHandler):
       return
   
   def delete(self, id=None):
+    if not self.checkCredentials(self.get_argument('key', None)):
+      self.error('9001', 'Invalid API key')
+      return
+
     if id == None or id == '':
       self.error('1004', 'Cannot delete application without an application id')
       return

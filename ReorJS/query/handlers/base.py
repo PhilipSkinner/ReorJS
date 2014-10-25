@@ -26,6 +26,7 @@
 """
 
 import simplejson as json
+import settings
 
 class BaseHandler():
   def __init__(self, server):
@@ -73,6 +74,12 @@ class BaseHandler():
   def status(self, code, message, id=None):
     self.jsonp({ 'meta' : { 'code' : code}, 'status' : { 'message' : message }, 'id' : id })
     return
+  
+  def checkCredentials(self, key):
+    if key == settings.ROOT_KEY:
+      return True
+    
+    return False
                     
   def get(self):
     self.error('405', 'Unsupported method - GET')

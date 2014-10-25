@@ -68,6 +68,7 @@ def main():
 	set_setting('MYSQL_USER',		config.mysql_user)
 	set_setting('MYSQL_PASSWORD',		config.mysql_password)
 	set_setting('HTTP_SERVICE',		config.server)
+	set_setting('ROOT_KEY',			config.root_key)
 
 	logger.LOG.log('ReorJS service starting...')
 	logger.LOG.log('Initializing API')
@@ -93,6 +94,7 @@ def main():
 	logger.LOG.info('MYSQL_USER		=> %s' % settings.MYSQL_USER)
 	logger.LOG.info('MYSQL_PASSWORD		=> %s' % settings.MYSQL_PASSWORD)
 	logger.LOG.info('HTTP_SERVICE		=> %s' % settings.HTTP_SERVICE)
+	logger.LOG.info('ROOT_KEY		=> %s' % settings.ROOT_KEY)
 	
 	#we need to configure our API database from settings
 	if api.connect():	

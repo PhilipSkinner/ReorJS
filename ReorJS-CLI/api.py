@@ -41,11 +41,11 @@ class API():
 	
 	def setKey(self, key):
 		self.key = key
-	
+		
 	def connectionTest(self):
 		#simply connect to the server
 		try:
-			response = urllib2.urlopen(self.host + '/output/v1/ping')
+			response = urllib2.urlopen(self.host + '/output/v1/ping?key=%s' % self.key)
 
 			if response.getcode() == 200:
 				return True
@@ -69,7 +69,7 @@ class API():
 
 	def detailTask(self, id=None):
 		try:
-			response = urllib2.urlopen(self.host + '/api/v1/task/%s' % id)
+			response = urllib2.urlopen(self.host + '/api/v1/task/%s?key=%s' % (id, self.key))
 			
 			if response.getcode() == 200:
 				raw = response.read()
@@ -90,6 +90,7 @@ class API():
 				'application' : application,
 				'dataset' : dataset,
 				'result' : result,
+				'key' : self.key,
 			}) 
                         response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
                                 
@@ -103,7 +104,7 @@ class API():
 
 	def listTasks(self):
 		try:
-			response = urllib2.urlopen(self.host + '/api/v1/task')
+			response = urllib2.urlopen(self.host + '/api/v1/task?key=%s' % (self.key))
 			
 			if response.getcode() == 200:
 				raw = response.read()
@@ -130,6 +131,7 @@ class API():
 				'source_table' 		: source_table,
 				'source_username' 	: source_username,
 				'source_password' 	: source_password,	
+				'key'			: self.key,
 			})
 			
                         response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
@@ -156,6 +158,7 @@ class API():
 				'source_table' 		: source_table,
 				'source_username' 	: source_username,
 				'source_password' 	: source_password,	
+				'key'			: self.key,
 			})
 			
                         response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
@@ -171,7 +174,7 @@ class API():
 	def deleteDataset(self, id=None):
 		try:
 			connection = httplib2.Http()
-			url = self.host + '/api/v1/dataset/%s' % id
+			url = self.host + '/api/v1/dataset/%s?key=%s' % (id, self.key)
 			response, content = connection.request(url, method='DELETE', headers={}, body='')
 			
 			if response.status == 200:
@@ -184,7 +187,7 @@ class API():
 
 	def detailDataset(self, id=None):
 		try:
-			response = urllib2.urlopen(self.host + '/api/v1/dataset/%s' % id)						
+			response = urllib2.urlopen(self.host + '/api/v1/dataset/%s?key=%s' % (id, self.key))
 			
 			if response.getcode() == 200:
 				raw = response.read()					
@@ -199,7 +202,7 @@ class API():
 	
 	def listDatasets(self):
 		try:
-			response = urllib2.urlopen(self.host + '/api/v1/dataset')
+			response = urllib2.urlopen(self.host + '/api/v1/dataset?key=%s' % (self.key))
 			
 			if response.getcode() == 200:
 				raw = response.read()
@@ -220,6 +223,7 @@ class API():
 			body = urllib.urlencode({
 				'name'		: name,
 				'program'	: program,
+				'key'		: self.key,
 			})
 			
                         response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
@@ -240,6 +244,7 @@ class API():
 			body = urllib.urlencode({
 				'name'		: name,
 				'program'	: program,
+				'key'		: self.key,
 			})
 
 			response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
@@ -255,7 +260,7 @@ class API():
 	def deleteApplication(self, id=None):
 		try:
 			connection = httplib2.Http()
-			url = self.host + '/api/v1/application/%s' % id
+			url = self.host + '/api/v1/application/%s?key=%s' % (id, self.key)
 			
 			response, content = connection.request(url, method='DELETE', headers={}, body='')
 			
@@ -269,7 +274,7 @@ class API():
 
 	def detailApplication(self, id=None):
 		try:
-			response = urllib2.urlopen(self.host + '/api/v1/application/%s' % id)
+			response = urllib2.urlopen(self.host + '/api/v1/application/%s?key=%s' % (id, self.key))
 			
 			if response.getcode() == 200:
 				raw = response.read()
@@ -285,7 +290,7 @@ class API():
 	def listApplications(self):
 		#so simple
 		try:
-			response = urllib2.urlopen(self.host + '/api/v1/application')
+			response = urllib2.urlopen(self.host + '/api/v1/application?key=%s' % self.key)
 			
 			if response.getcode() == 200:
 				raw = response.read()

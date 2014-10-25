@@ -61,6 +61,7 @@ def configure():
                'blocksize' 	: '100',
                'tasklimit' 	: '15',
                'readmethod' 	: '1',
+               'root-key'	: None,
         }
 
 	#do we have a conf file?
@@ -115,6 +116,9 @@ def configure():
 	parser.add_argument('--blocksize', default=defaults['blocksize'], help='Default processing block size')
 	parser.add_argument('--tasklimit', default=defaults['tasklimit'], help='Number of tasks to process at the same time')
 	parser.add_argument('--readmethod', default=defaults['readmethod'], help='Read method for stacker tasks')
+	
+	#authentication settings
+	parser.add_argument('--root-key', default=defaults['root-key'], help="Define the root API key")
 
         args = parser.parse_args(remaining_argv)        
 

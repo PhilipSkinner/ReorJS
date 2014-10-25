@@ -407,29 +407,39 @@ class ReorJSCLI(cmd.Cmd):
   ##
 
   def doRecord(self, hash):
+    if 'error' in hash:
+      return self.doStatus(hash)
+  
     for k, v in hash.iteritems():
       print bcolors.HEADER + k + bcolors.ENDC + '\t\t: ' + str(v)
   
   def doTable(self, hash):
     table = None
+    
+    if hash == None:
+      return
+      
+    if 'error' in hash:
+      return self.doStatus(hash)
       
     for rec in hash:
-      if table == None:
-        cols = rec.keys()
-        cols = [bcolors.HEADER + c + bcolors.ENDC for c in cols]
-        table = PrettyTable(cols)
+      if rec != None:
+        if table == None:
+          cols = rec.keys()
+          cols = [bcolors.HEADER + c + bcolors.ENDC for c in cols]
+          table = PrettyTable(cols)
 
-      vals = []
-      for v in rec.values():
-        try:
-          if len(v) > 100:
-            v = '%s...' % v[:100]
-        except:
-          pass
+        vals = []
+        for v in rec.values():
+          try:
+            if len(v) > 100:
+              v = '%s...' % v[:100]
+          except:
+            pass
         
-        vals.append(v)
+          vals.append(v)
 
-      table.add_row(vals)
+        table.add_row(vals)
       
     print table    
     
