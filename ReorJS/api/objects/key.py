@@ -1,17 +1,17 @@
 """
-        query/handlers/__init__.py
-	ReorJS API Handlers
-          
+	api/objects/key.py
+	ReorJSd API Key Object
+        
         --
-	Basic inc script.
+	Provides a description of the API key object.
         --
-          
+        
         Author(s)       - Philip Skinner (philip@crowdca.lc)
         Last modified   - 2014-10-25
         
         This program is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as published by
-        the Free Software Foundation, either version 3 of the License, or   
+        the Free Software Foundation, either version 3 of the License, or
         (at your option) any later version.
             
         This program is distributed in the hope that it will be useful,     
@@ -25,8 +25,22 @@
         Copyright (c) 2014, Crowdcalc B.V.
 """
 
-from base import *
-from application import *
-from dataset import *
-from task import *
-from key import *
+from base import ObjectBase
+
+class Key(ObjectBase):
+  __tablename__ = 'key'
+
+  def __initattributes__(self):  
+    self.id 		= self.Column('id', int, primary_key=True)
+    self.key		= self.Column('key', str)
+    
+    self.__attributes__ = True
+  
+  def __repr__(self):    
+    return "<Key>"
+  
+  def to_serializable_object(self):
+    return {
+      'id' 		: str(self.id.value()),
+      'key'		: str(self.key.value()),
+    }

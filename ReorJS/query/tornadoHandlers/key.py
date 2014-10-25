@@ -1,9 +1,9 @@
 """
-        query/handlers/__init__.py
-	ReorJS API Handlers
+        query/tornadoHandlers/key.py
+        ReorJSd API Key Tornado Handlers
           
         --
-	Basic inc script.
+	Tornado handlers for Key endpoints.
         --
           
         Author(s)       - Philip Skinner (philip@crowdca.lc)
@@ -26,7 +26,28 @@
 """
 
 from base import *
-from application import *
-from dataset import *
-from task import *
-from key import *
+
+class APIKeyHandler(BaseHandler):
+  def get(self, id=None):
+    self.application.KeyHandler.setParent(self)
+  
+    if id == '':
+      id = None
+      
+    self.application.KeyHandler.get(id=id)
+
+  def post(self, id=None):
+    self.application.KeyHandler.setParent(self)
+  
+    if id == '':
+      id = None
+      
+    self.application.KeyHandler.post(id=id)
+  
+  def delete(self, id=None):
+    self.application.KeyHandler.setParent(self)
+    
+    if id == '':
+      id = None
+    
+    self.application.KeyHandler.delete(id=id)

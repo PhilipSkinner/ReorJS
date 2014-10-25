@@ -45,6 +45,8 @@ class QueryTornado(BaseQueryService):
 			(r'/api/v1/task/?(.*)', tornadoHandlers.APITaskHandler),
 			(r'/api/v1/application', tornadoHandlers.APIApplicationHandler),
 			(r'/api/v1/application/?(.*)', tornadoHandlers.APIApplicationHandler),
+			(r'/api/v1/key', tornadoHandlers.APIKeyHandler),
+			(r'/api/v1/key/?(.*)', tornadoHandlers.APIKeyHandler),
 		]
 		
 		if output != None:
@@ -79,6 +81,7 @@ def TornadoApp(handlers=None, output=None, input=None):
                                 self.DataSetHandler = _handlers.APIDataSetHandler(self)
                                 self.TaskHandler = _handlers.APITaskHandler(self)
                                 self.ApplicationHandler = _handlers.APIApplicationHandler(self)                                                                
+                                self.KeyHandler = _handlers.APIKeyHandler(self)
                                 
                                 self.output = output
                                 self.input = input

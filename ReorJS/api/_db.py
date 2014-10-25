@@ -32,6 +32,7 @@ from objects.data import Dataset
 from objects.data import DatasetData
 from objects.stacker import Stacker
 from objects.task import Task
+from objects.key import Key
 
 class APIDB():
 	Application 	= None
@@ -58,6 +59,7 @@ class APIDB():
 		self.DatasetData 	= DatasetData(parent=self, init=True)
 		self.Stacker 		= Stacker(parent=self, init=True)
 		self.Task		= Task(parent=self, init=True)		
+		self.Key		= Key(parent=self, init=True)
 		
 		self.ready = True
 		

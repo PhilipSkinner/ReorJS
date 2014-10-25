@@ -28,6 +28,8 @@
 
 import sys
 import os
+import string
+import random
 
 base = sys.argv[1]
 conf = sys.argv[2]
@@ -66,6 +68,7 @@ elif db == 'mongo':
   f.write('mongo-host=localhost\n')
   f.write('mongo-port=27017\n')
 f.write('server=%s\n' % http)
+f.write('root-key=%s' % ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(24)))
 f.close()
 
 print "Generating system startup script"

@@ -31,6 +31,10 @@ import settings
 
 class APITaskHandler(BaseHandler):
   def get(self, id=None):
+    if not self.checkCredentials(self.get_argument('key', None)):
+      self.error('9001', 'Invalid API key')
+      return
+
     if id == None or id == '':
       tasks = api.db.Task.search({})
       
@@ -47,6 +51,10 @@ class APITaskHandler(BaseHandler):
       return
   
   def post(self, id=None):
+    if not self.checkCredentials(self.get_argument('key', None)):
+      self.error('9001', 'Invalid API key')
+      return
+
     application = self.get_argument('application', None)
     dataset = self.get_argument('dataset', None)
     result = self.get_argument('result', None)

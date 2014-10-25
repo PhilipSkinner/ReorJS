@@ -30,6 +30,10 @@ import api
 
 class APIDataSetHandler(BaseHandler):
   def get(self, id=None):  
+    if not self.checkCredentials(self.get_argument('key', None)):
+      self.error('9001', 'Invalid API key')
+      return
+
     if id == None or id == '':
       results = api.db.Dataset.search({})
       
@@ -46,6 +50,10 @@ class APIDataSetHandler(BaseHandler):
       return
   
   def post(self, id=None):
+    if not self.checkCredentials(self.get_argument('key', None)):
+      self.error('9001', 'Invalid API key')
+      return
+
     name 		= self.get_argument('name', None)
     source_type 	= self.get_argument('source_type', None)
     source_name 	= self.get_argument('source_name', None)
@@ -93,9 +101,13 @@ class APIDataSetHandler(BaseHandler):
       return
   
   def put(self, id=None):
-    self.post(id=id)
+    return self.post(id=id)
   
   def delete(self, id=None):
+    if not self.checkCredentials(self.get_argument('key', None)):
+      self.error('9001', 'Invalid API key')
+      return
+
     if id == None or id == '':
       self.error('2003', 'Cannot delete dataset without a dataset id')
       return
@@ -113,6 +125,10 @@ class APIDataSetHandler(BaseHandler):
 
 class APIDataSetDataHandler(BaseHandler):
   def get(self, id=None):
+    if not self.checkCredentials(self.get_argument('key', None)):
+      self.error('9001', 'Invalid API key')
+      return
+
     if id == None or id == '':
       self.error('2004', 'Dataset data fetching requires dataset id')
       return
@@ -123,6 +139,10 @@ class APIDataSetDataHandler(BaseHandler):
     return
   
   def post(self, id=None):
+    if not self.checkCredentials(self.get_argument('key', None)):
+      self.error('9001', 'Invalid API key')
+      return
+
     items = self.get_arguments('data', [])
     
     if len(items) == 0 or items == None:

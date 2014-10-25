@@ -37,31 +37,36 @@ Applications
 Endpoint: /api/v1/application
 Method: GET
 Description: Fetch a list of applications from the API.
-Arguments: None
+Arguments:
+  key			=> A valid API key
 
 Endpoint: /api/v1/application
 Method: POST
 Description: Create a new application.
 Arguments:
+  key			=> A valid API key
   name 		=> The name of the program
   program 	=> The Javascript program
 
 Endpoint: /api/v1/application/[application id]
 Method: GET
 Description: Gets the details of the application
-Arguments: None
+Arguments:
+  key			=> A valid API key
 
 Endpoint: /api/v1/application/[application id]
 Method: POST
 Description: Modifies the application
 Arguments:
+  key			=> A valid API key
   name		=> The name of the program
   program	=> The Javascript program
 
 Endpoint: /api/v1/application/[application id]
 Method: DELETE
 Description: Deletes the application
-Arguments: None
+Arguments:
+  key			=> A valid API key
 
 Datasets
 --------
@@ -69,12 +74,14 @@ Datasets
 Endpoint: /api/v1/dataset
 Method: GET
 Description: Fetch a list of datasets from the API.
-Arguments: None
+Arguments:
+  key			=> A valid API key
 
 Endpoint: /api/v1/dataset
 Method: POST
 Description: Create a new dataset
 Arguments:
+  key			=> A valid API key
   name			=> The name of the dataset
   source_type		=> The type of source (mysql, redis, mongo)
   source_hostname 	=> The hostname of the source
@@ -87,12 +94,14 @@ Arguments:
 Endpoint: /api/v1/dataset/[dataset id]
 Method: GET
 Description: Gets the details of the dataset
-Arguments: None
+Arguments:
+  key			=> A valid API key
 
 Endpoint: /api/v1/dataset/[dataset id]
 Method: POST
 Description: Updates the datasets details.
 Arguments:
+  key			=> A valid API key
   name			=> The name of the dataset
   source_type		=> The type of source (mysql, redis, mongo)
   source_hostname 	=> The hostname of the source
@@ -105,7 +114,8 @@ Arguments:
 Endpoint: /api/v1/dataset/[dataset id]
 Method: DELETE
 Description: Deletes the dataset
-Arguments: None
+Arguments:
+  key			=> A valid API key
 
 Tasks
 -----
@@ -113,12 +123,14 @@ Tasks
 Endpoint: /api/v1/tasks
 Method: GET
 Description: Fetch a list of tasks from the API
-Arguments: None
+Arguments:
+  key			=> A valid API key
 
 Endpoint: /api/v1/tasks
 Method: POST
 Description: Creates a task
 Arguments:
+  key			=> A valid API key
   application		=> The ID of the application to run
   dataset		=> The ID of the dataset to use as source data
   result		=> The ID of the dataset to store the result in
@@ -126,7 +138,23 @@ Arguments:
 Endpoint: /api/v1/tasks/[task id]
 Method: GET
 Description: Gets the details of the task
-Arguments: None
+Arguments:
+  key			=> A valid API key
+
+Supplemental
+------------
+
+Endpoint: /output/v1/ping
+Method: GET
+Description: Pings the output service
+Arguments: 
+  key			=> A valid API key
+
+Endpoint: /output/v1/status
+Method: GET
+Description: Fetches the status of the input/output stacker
+Arguments:
+  key			=> A valid API key
 
 == Error Codes ==
 
@@ -197,3 +225,8 @@ The special cursor value for the result was missing from the result. Please ensu
 5002 => Missing result for cursor
 The result for this cursor was missing. Make sure that your application code is returning a correct result for every possible input value. Check the application development best practices document to ensure your application is as compatible as possible with the system.
 
+9001 => Invalid API Key
+An invalid api key was sent for authentication. This error will also occur if no API key is sent.
+
+9002 => Could not reach output service
+An attempt was made to ping the server and an invalid response was returned
