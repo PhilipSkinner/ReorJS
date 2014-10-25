@@ -43,6 +43,7 @@ class QueryBaseHTTPServer(BaseQueryService):
 		self.DataSetHandler = handlers.APIDataSetHandler(self)
 		self.TaskHandler = handlers.APITaskHandler(self)
 		self.ApplicationHandler = handlers.APIApplicationHandler(self)
+		self.KeyHandler = handlers.APIKeyHandler(self)
 		
 		self.output = output
 		self.input = input		
@@ -81,6 +82,9 @@ class HTTPHandler(BaseHTTPRequestHandler):
 			('/api/v1/application/(.*)', self.application_handler),
 			('/api/v1/application/',self.application_handler),
 			('/api/v1/application',	self.application_handler),
+			('/api/v1/key/(.*)', self.key_handler),
+			('/api/v1/key/', self.key_handler),
+			('/api/v1/key', self.key_handler),
 		]
 		
 		if self.server.parent.output != None:
@@ -232,6 +236,27 @@ class HTTPHandler(BaseHTTPRequestHandler):
 
 		self.complete_request()
 		return
+	
+	def key_handler(self, method, url, matches):
+		parts = matches.groups()
+		id = None
+		
+		if len(parts) > 0:
+			id = parts[0]
+			
+		self.server.parent.KeyHandler.setParent(self)
+		
+		if method == 'GET':
+			self.server.parent.KeyHandler.get(id=id)
+		elif method == 'POST':
+			self.server.parent.KeyHandler.post(id=id)
+		elif method == 'DELETE':
+			self.server.parent.KeyHandler.delete(id=id)
+		elif method == 'PUT':
+			self.server.parent.KeyHandler.put(id=id)
+			
+		self.complete_request()
+		return			
 	
 	def application_handler(self, method, url, matches):
 		parts = matches.groups()

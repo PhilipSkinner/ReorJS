@@ -7,7 +7,7 @@
         --
           
         Author(s)       - Philip Skinner (philip@crowdca.lc)
-        Last modified   - 2014-09-28
+        Last modified   - 2014-10-25
         
         This program is free software: you can redistribute it and/or modify
         it under the terms of the GNU General Public License as published by
@@ -29,3 +29,4 @@ from base import *
 from application import *
 from dataset import *
 from task import *
+from key import *

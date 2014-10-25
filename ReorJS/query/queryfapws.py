@@ -42,6 +42,7 @@ class QueryFAPWS(BaseQueryService):
 		self.DataSetHandler = handlers.APIDataSetHandler(self)
 		self.TaskHandler = handlers.APITaskHandler(self)
 		self.ApplicationHandler = handlers.APIApplicationHandler(self)
+		self.KeyHandler = handlers.APIKeyHandler(self)
 		
 		if output != None:
 			self.output = output
@@ -63,6 +64,8 @@ class QueryFAPWS(BaseQueryService):
 		self.server.wsgi_cb(('/api/v1/task', self.task_handler))
 		self.server.wsgi_cb(('/api/v1/application/(.*)', self.application_handler))
 		self.server.wsgi_cb(('/api/v1/application', self.application_handler))
+		self.server.wsgi_cb(('/api/v1/key/(.*)', self.key_handler))
+		self.server.wsgi_cb(('/api/v1/key', self.key_handler))
 		
 		if self.output != None:
 			self.server.wsgi_cb(('/output/v1/task', self.get_task_handler))
@@ -229,6 +232,28 @@ class QueryFAPWS(BaseQueryService):
 		elif method == 'PUT':
 			ret = self.TaskHandler.put(id=id)
 
+		resp.headers()
+		return [resp.response]
+
+        def key_handler(self, environ, start_response):
+                id = None
+		if 'PATH_INFO' in environ and environ['PATH_INFO'] != None:
+			id = environ['PATH_INFO'].replace('/', '')
+			
+                resp = FAPWSReponse(environ, start_response)
+                self.KeyHandler.setParent(resp)
+                
+                method = self.determine_method(environ)
+
+		if method == 'GET':
+			ret = self.KeyHandler.get(id=id)		
+		elif method == 'POST':
+			ret = self.KeyHandler.post(id=id)		
+		elif method == 'DELETE':
+			ret = self.KeyHandler.delete(id=id)		
+		elif method == 'PUT':
+			ret = self.KeyHandler.put(id=id)
+  
 		resp.headers()
 		return [resp.response]
 

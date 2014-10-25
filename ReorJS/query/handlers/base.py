@@ -27,6 +27,7 @@
 
 import simplejson as json
 import settings
+import api
 
 class BaseHandler():
   def __init__(self, server):
@@ -75,8 +76,16 @@ class BaseHandler():
     self.jsonp({ 'meta' : { 'code' : code}, 'status' : { 'message' : message }, 'id' : id })
     return
   
-  def checkCredentials(self, key):
+  def checkCredentials(self, key, rootOnly=False):
     if key == settings.ROOT_KEY:
+      return True
+    
+    if rootOnly:
+      return False
+    
+    #now we search for an applicable key
+    target = api.db.Key.find({ 'key' : key })    
+    if key != None:
       return True
     
     return False
