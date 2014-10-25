@@ -318,7 +318,7 @@ class API():
 		except:
 			pass
 		
-		return {}
+		return { 'error' : 'Could not reach output service', 'code' : '9002' }
 
 	def status(self):
 		try:
