@@ -288,7 +288,6 @@ class API():
 		return {}
 
 	def listApplications(self):
-		#so simple
 		try:
 			response = urllib2.urlopen(self.host + '/api/v1/application?key=%s' % self.key)
 			
@@ -302,3 +301,36 @@ class API():
 			pass
 			
 		return []
+	
+	def ping(self):
+		try:
+			response = urllib2.urlopen(self.host + '/output/v1/ping?key=%s' % self.key)
+			
+			if response.getcode() == 200:
+				raw = response.read()
+
+				data = { 'error' : 'Could not reach output service', 'code' : '9002' }
+
+				if raw == 'PONG':
+					data = { 'status' : { 'message' : 'PONG received!' }, 'code' : '200' }
+					
+				return data
+		except:
+			pass
+		
+		return {}
+
+	def status(self):
+		try:
+			response = urllib2.urlopen(self.host + '/output/v1/status?key=%s' % self.key)
+			
+			if response.getcode() == 200:
+				raw = response.read()
+				
+				data = json.loads(raw)
+				
+				return self.checkData(data)
+		except:
+			pass
+		
+		return {}

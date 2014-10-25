@@ -77,6 +77,40 @@ class ReorJSCLI(cmd.Cmd):
   ##
   # connect: end
   ##
+
+  ##
+  # ping: pings the output service to ensure its running
+  ##
+  
+  def do_ping(self, details):
+    details = shlex.split(details)
+    
+    return self.doStatus(self.api.ping())
+
+  def help_ping(self):
+    self.bad('Usage: ping')
+    self.normal('Pings the output service and returns its response')
+  
+  ##
+  # ping: end
+  ##
+  
+  ##
+  # status: fetches the stacker status
+  ##
+  
+  def do_status(self, details):
+    details = shlex.split(details)
+    
+    return self.doRecord(self.api.status())
+    
+  def help_status(self):
+    self.bad('Usage: status')
+    self.normal('Displays current status of the task/results stacker')
+  
+  ##
+  # status: end
+  ##
   
   ##
   # task: allows user to manipulate tasks through the api

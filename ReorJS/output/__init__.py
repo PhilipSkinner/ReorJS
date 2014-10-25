@@ -49,13 +49,21 @@ class GetTaskHandler(query.handlers.base.BaseHandler):
     return
     
 class PingHandler(query.handlers.base.BaseHandler):
-  def get(self):
+  def get(self):    
+    if not self.checkCredentials(self.get_argument('key', None)):
+      self.error('9001', 'Invalid API key')
+      return
+
     #pong
     self.write('PONG')
     return
   
 class StatusHandler(query.handlers.base.BaseHandler):
   def get(self):
+    if not self.checkCredentials(self.get_argument('key', None)):
+      self.error('9001', 'Invalid API key')
+      return
+
     #get the status
     self.payload(stack.stacker.get_status())
     return
