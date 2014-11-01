@@ -37,6 +37,8 @@ class APIApplicationHandler(BaseHandler):
     self.application.ApplicationHandler.get(id=id)
 
   def post(self, id=None):
+    print self.request
+  
     self.application.ApplicationHandler.setParent(self)
   
     if id == '':

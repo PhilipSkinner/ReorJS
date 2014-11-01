@@ -28,11 +28,11 @@
 from base import ObjectBase
 
 class Key(ObjectBase):
-  __tablename__ = 'key'
+  __tablename__ = 'access_keys'
 
   def __initattributes__(self):  
     self.id 		= self.Column('id', int, primary_key=True)
-    self.key		= self.Column('key', str)
+    self.access_key	= self.Column('access_key', str)
     
     self.__attributes__ = True
   
@@ -42,5 +42,5 @@ class Key(ObjectBase):
   def to_serializable_object(self):
     return {
       'id' 		: str(self.id.value()),
-      'key'		: str(self.key.value()),
+      'access_key'	: str(self.access_key.value()),
     }

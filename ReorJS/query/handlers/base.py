@@ -84,7 +84,7 @@ class BaseHandler():
       return False
     
     #now we search for an applicable key
-    target = api.db.Key.find({ 'key' : key })    
+    target = api.db.Key.find({ 'access_key' : key })    
     if key != None:
       return True
     

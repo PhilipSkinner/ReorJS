@@ -17,11 +17,7 @@
     function setKey($key) {
       $this->key = $key;
     }
-    
-    function connectionTest() {
-      
-    }
-    
+        
     function checkData($data) {
       if (isset($data['meta'])) {
         if (isset($data['meta']['code'])) {
@@ -34,8 +30,8 @@
           } else {
             if (isset($data['error'])) {
               return array(
-                error => $data['error'],
-                code => $data['meta']['code']
+                "error" => $data['error'],
+                "code" => $data['meta']['code']
               );
             }
           }
@@ -47,7 +43,6 @@
     
     function detailTask($id=null) {
       $req = new HTTP($this->_generateURL("/api/v1/task/" . $id), $this->port, "GET");
-      $req->headers["Connection"] = "close";
       $req->send() or die("Couldn't send!");
       
       $raw = $req->getResponseBody();
@@ -57,12 +52,23 @@
     }
     
     function createTask($application=null, $dataset=null, $result=null) {
-    
+      $req = new HTTP($this->_generateURL("/api/v1/task"), $this->port, "POST");
+      $req->headers["Content-Type"] = "application/x-www-form-urlencoded";
+      $req->body = [
+        "application"		=> $application,
+        "dataset"		=> $dataset,
+        "result"		=> $result,
+      ];      
+      $req->send() or die("Couldn't send!");
+      
+      $raw = $req->getResponseBody();
+      $data = json_decode($raw, true);
+
+      return $this->checkData($data);                        
     }
     
     function listTasks() {
       $req = new HTTP($this->_generateURL("/api/v1/task"), $this->port, "GET");
-      $req->headers["Connection"] = "close";
       $req->send() or die("Couldn't send!");
       
       $raw = $req->getResponseBody();
@@ -72,16 +78,49 @@
     }
     
     function createDataset($name=null, $source_type=null, $source_hostname=null, $source_port=null, $source_name=null, $source_table=null, $source_username=null, $source_password=null) {
-    
+      $req = new HTTP($this->_generateURL("/api/v1/dataset"), $this->port, "POST");
+      $req->headers["Content-Type"] = "application/x-www-form-urlencoded";
+      $req->body = [
+        "name" 			=> $name,
+        "source_type" 		=> $source_type,
+        "source_hostname" 	=> $source_hostname,
+        "source_port" 		=> $source_port,
+        "source_name" 		=> $source_name,
+        "source_table" 		=> $source_table,
+        "source_username" 	=> $source_username,
+        "source_password" 	=> $source_password,
+      ];      
+      $req->send() or die("Couldn't send!");
+      
+      $raw = $req->getResponseBody();
+      $data = json_decode($raw, true);
+
+      return $this->checkData($data);                  
     }
     
     function modifyDataset($id=null, $name=null, $source_type=null, $source_hostname=null, $source_port=null, $source_name=null, $source_table=null, $source_username=null, $source_password=null) {
-    
+      $req = new HTTP($this->_generateURL("/api/v1/dataset/" . $id), $this->port, "POST");
+      $req->headers["Content-Type"] = "application/x-www-form-urlencoded";
+      $req->body = [
+        "name" 			=> $name,
+        "source_type" 		=> $source_type,
+        "source_hostname" 	=> $source_hostname,
+        "source_port" 		=> $source_port,
+        "source_name" 		=> $source_name,
+        "source_table" 		=> $source_table,
+        "source_username" 	=> $source_username,
+        "source_password" 	=> $source_password,
+      ];      
+      $req->send() or die("Couldn't send!");
+      
+      $raw = $req->getResponseBody();
+      $data = json_decode($raw, true);
+
+      return $this->checkData($data);                  
     }
     
     function deleteDataset($id=null) {
       $req = new HTTP($this->_generateURL("/api/v1/dataset/" . $id), $this->port, "DELETE");
-      $req->headers["Connection"] = "close";
       $req->send() or die("Couldn't send!");
       
       $raw = $req->getResponseBody();
@@ -92,7 +131,6 @@
     
     function detailDataset($id=null) {
       $req = new HTTP($this->_generateURL("/api/v1/dataset/" . $id), $this->port, "GET");
-      $req->headers["Connection"] = "close";
       $req->send() or die("Couldn't send!");
       
       $raw = $req->getResponseBody();
@@ -103,7 +141,6 @@
     
     function listDatasets() {
       $req = new HTTP($this->_generateURL("/api/v1/dataset"), $this->port, "GET");
-      $req->headers["Connection"] = "close";
       $req->send() or die("Couldn't send!");
       
       $raw = $req->getResponseBody();
@@ -113,16 +150,37 @@
     }
     
     function createApplication($name=null, $program=null) {
-    
+      $req = new HTTP($this->_generateURL("/api/v1/application"), $this->port, "POST");
+      $req->headers["Content-Type"] = "application/x-www-form-urlencoded";
+      $req->body = [
+        "name" => $name,
+        "program" => $program,
+      ];      
+      $req->send() or die("Couldn't send!");
+      
+      $raw = $req->getResponseBody();
+      $data = json_decode($raw, true);
+
+      return $this->checkData($data);              
     }
     
     function modifyApplication($id=null, $name=null, $program=null) {
-    
+      $req = new HTTP($this->_generateURL("/api/v1/application/" . $id), $this->port, "POST");
+      $req->headers["Content-Type"] = "application/x-www-form-urlencoded";
+      $req->body = [
+        "name" => $name,
+        "program" => $program,
+      ];      
+      $req->send() or die("Couldn't send!");
+      
+      $raw = $req->getResponseBody();
+      $data = json_decode($raw, true);
+
+      return $this->checkData($data);      
     }
     
     function deleteApplication($id=null) {
       $req = new HTTP($this->_generateURL("/api/v1/application/" . $id), $this->port, "DELETE");
-      $req->headers["Connection"] = "close";
       $req->send() or die("Couldn't send!");
       
       $raw = $req->getResponseBody();
@@ -133,7 +191,6 @@
     
     function detailApplication($id=null) {
       $req = new HTTP($this->_generateURL("/api/v1/application/" . $id), $this->port, "GET");
-      $req->headers["Connection"] = "close";
       $req->send() or die("Couldn't send!");
       
       $raw = $req->getResponseBody();
@@ -144,7 +201,6 @@
     
     function listApplications() {
       $req = new HTTP($this->_generateURL("/api/v1/application"), $this->port, "GET");
-      $req->headers["Connection"] = "close";
       $req->send() or die("Couldn't send!");
       
       $raw = $req->getResponseBody();
@@ -182,18 +238,40 @@
       $this->host_name = $this->url_info['host'];
       $this->host_ip = gethostbyname($this->host_name); 
       $this->port = $port; 
+      
+      $this->headers["Host"] = $this->host_name;
+      if ($this->port) {
+        $this->headers["Host"] .= ':' . $this->port;
+      }
+      $this->headers["Cache-Control"] = "no-cache";
+      $this->headers["Connection"] = "close";
   }
  
   private function constructRequest() {
     $path = "/";
-    if(isset($this->url_info['path']))
+    if(isset($this->url_info['path'])) {
       $path = $this->url_info['path'];
+    }
+
+    $body = '';
+    if ($this->body != null) {
+      foreach($this->body as $key => $value) {
+        $body .= $key . '=' . urlencode($value) . '&';
+      }
+      $this->headers["Content-Length"] = strlen($body);      
+    }  
  
     $req = "$this->method $path HTTP/1.1\r\n";
     foreach($this->headers as $header => $value) {
       $req .= "$header: $value\r\n";
     }
-  
+
+    if ($body != '') {
+      $req .= "\r\n";
+      $req .= $body;
+      $req .= "\r\n";
+    }
+    
     return "$req\r\n";
   }
  
@@ -211,7 +289,7 @@
  
   public function send() { 
     $fp = fsockopen($this->host_ip, $this->port); 
-    $request = $this->constructRequest();
+    $request = $this->constructRequest();    
     fwrite($fp, $request);
     $line = $this->readline($fp);
     $status = explode(" ", $line);
@@ -239,7 +317,7 @@
         $this->response_headers[$header[0]] = ltrim($header[1]);
       }
     } while(!feof($fp) && $line != "");
- 
+    
     $this->response_body = "";
     do {
       $line = $this->readLine($fp);

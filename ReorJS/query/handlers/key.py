@@ -57,7 +57,7 @@ class APIKeyHandler(BaseHandler):
       self.error('9001', 'Invalid API key')
       return
     
-    key = api.db.Key.create({ 'key' : ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(24)) })
+    key = api.db.Key.create({ 'access_key' : ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(24)) })
     key.update()
 
     self.status('200', 'Key successfully created')
