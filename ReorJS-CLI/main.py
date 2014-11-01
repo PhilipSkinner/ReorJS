@@ -29,7 +29,7 @@
 
 import cmd
 import shlex
-import api
+import reorjs
 from prettytable import PrettyTable
 
 class bcolors:
@@ -42,7 +42,7 @@ class bcolors:
 
 class ReorJSCLI(cmd.Cmd):
   """ReorJS Client"""
-  api = api.API()
+  api = reorjs.ReorJS()
   
   prompt = bcolors.HEADER + '[reorjs]: ' + bcolors.ENDC
   intro = bcolors.OKBLUE + '\nWelcome to ReorJS!' + bcolors.ENDC + '\n\nTo initialize session please connect to reorjsd (see help connect)\n'

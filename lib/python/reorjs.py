@@ -36,16 +36,17 @@ class ReorJS():
 		self.host = 'http://localhost:9999' #default
 		self.key = ''
 	
+	
 	def setHost(self, host):
 		self.host = host
 	
 	def setKey(self, key):
 		self.key = key
-	
+		
 	def connectionTest(self):
 		#simply connect to the server
 		try:
-			response = urllib2.urlopen(self.host + '/output/v1/ping')
+			response = urllib2.urlopen(self.host + '/output/v1/ping?key=%s' % self.key)
 
 			if response.getcode() == 200:
 				return True
@@ -69,7 +70,7 @@ class ReorJS():
 
 	def detailTask(self, id=None):
 		try:
-			response = urllib2.urlopen(self.host + '/api/v1/task/%s' % id)
+			response = urllib2.urlopen(self.host + '/api/v1/task/%s?key=%s' % (id, self.key))
 			
 			if response.getcode() == 200:
 				raw = response.read()
@@ -90,6 +91,7 @@ class ReorJS():
 				'application' : application,
 				'dataset' : dataset,
 				'result' : result,
+				'key' : self.key,
 			}) 
                         response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
                                 
@@ -103,7 +105,7 @@ class ReorJS():
 
 	def listTasks(self):
 		try:
-			response = urllib2.urlopen(self.host + '/api/v1/task')
+			response = urllib2.urlopen(self.host + '/api/v1/task?key=%s' % (self.key))
 			
 			if response.getcode() == 200:
 				raw = response.read()
@@ -130,6 +132,7 @@ class ReorJS():
 				'source_table' 		: source_table,
 				'source_username' 	: source_username,
 				'source_password' 	: source_password,	
+				'key'			: self.key,
 			})
 			
                         response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
@@ -156,6 +159,7 @@ class ReorJS():
 				'source_table' 		: source_table,
 				'source_username' 	: source_username,
 				'source_password' 	: source_password,	
+				'key'			: self.key,
 			})
 			
                         response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
@@ -171,7 +175,7 @@ class ReorJS():
 	def deleteDataset(self, id=None):
 		try:
 			connection = httplib2.Http()
-			url = self.host + '/api/v1/dataset/%s' % id
+			url = self.host + '/api/v1/dataset/%s?key=%s' % (id, self.key)
 			response, content = connection.request(url, method='DELETE', headers={}, body='')
 			
 			if response.status == 200:
@@ -184,7 +188,7 @@ class ReorJS():
 
 	def detailDataset(self, id=None):
 		try:
-			response = urllib2.urlopen(self.host + '/api/v1/dataset/%s' % id)						
+			response = urllib2.urlopen(self.host + '/api/v1/dataset/%s?key=%s' % (id, self.key))
 			
 			if response.getcode() == 200:
 				raw = response.read()					
@@ -199,7 +203,7 @@ class ReorJS():
 	
 	def listDatasets(self):
 		try:
-			response = urllib2.urlopen(self.host + '/api/v1/dataset')
+			response = urllib2.urlopen(self.host + '/api/v1/dataset?key=%s' % (self.key))
 			
 			if response.getcode() == 200:
 				raw = response.read()
@@ -220,6 +224,7 @@ class ReorJS():
 			body = urllib.urlencode({
 				'name'		: name,
 				'program'	: program,
+				'key'		: self.key,
 			})
 			
                         response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
@@ -240,6 +245,7 @@ class ReorJS():
 			body = urllib.urlencode({
 				'name'		: name,
 				'program'	: program,
+				'key'		: self.key,
 			})
 
 			response, content = connection.request(url, method='POST', headers={'Content-Type' : 'application/x-www-form-urlencoded'}, body=body)
@@ -255,7 +261,7 @@ class ReorJS():
 	def deleteApplication(self, id=None):
 		try:
 			connection = httplib2.Http()
-			url = self.host + '/api/v1/application/%s' % id
+			url = self.host + '/api/v1/application/%s?key=%s' % (id, self.key)
 			
 			response, content = connection.request(url, method='DELETE', headers={}, body='')
 			
@@ -269,7 +275,7 @@ class ReorJS():
 
 	def detailApplication(self, id=None):
 		try:
-			response = urllib2.urlopen(self.host + '/api/v1/application/%s' % id)
+			response = urllib2.urlopen(self.host + '/api/v1/application/%s?key=%s' % (id, self.key))
 			
 			if response.getcode() == 200:
 				raw = response.read()
@@ -284,7 +290,7 @@ class ReorJS():
 
 	def listApplications(self):
 		try:
-			response = urllib2.urlopen(self.host + '/api/v1/application')
+			response = urllib2.urlopen(self.host + '/api/v1/application?key=%s' % self.key)
 			
 			if response.getcode() == 200:
 				raw = response.read()
@@ -296,3 +302,36 @@ class ReorJS():
 			pass
 			
 		return []
+	
+	def ping(self):
+		try:
+			response = urllib2.urlopen(self.host + '/output/v1/ping?key=%s' % self.key)
+			
+			if response.getcode() == 200:
+				raw = response.read()
+
+				data = { 'error' : 'Could not reach output service', 'code' : '9002' }
+
+				if raw == 'PONG':
+					data = { 'status' : { 'message' : 'PONG received!' }, 'code' : '200' }
+					
+				return data
+		except:
+			pass
+		
+		return { 'error' : 'Could not reach output service', 'code' : '9002' }
+
+	def status(self):
+		try:
+			response = urllib2.urlopen(self.host + '/output/v1/status?key=%s' % self.key)
+			
+			if response.getcode() == 200:
+				raw = response.read()
+				
+				data = json.loads(raw)
+				
+				return self.checkData(data)
+		except:
+			pass
+		
+		return {}
