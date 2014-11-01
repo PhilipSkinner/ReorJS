@@ -1,0 +1,119 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module reorjs</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>reorjs</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/philip/Development/ReorJS/lib/python/reorjs.py">/home/philip/Development/ReorJS/lib/python/reorjs.py</a></font></td></tr></table>
+    <p><tt>api.py<br>
+Simple&nbsp;<a href="#ReorJS">ReorJS</a>&nbsp;API&nbsp;connector<br>
+&nbsp;<br>
+--<br>
+Provides&nbsp;simple&nbsp;programmatic&nbsp;access&nbsp;to&nbsp;the&nbsp;<a href="#ReorJS">ReorJS</a>&nbsp;server&nbsp;API&nbsp;calls&nbsp;for&nbsp;managing<br>
+<a href="#ReorJS">ReorJS</a>&nbsp;application,&nbsp;dataset&nbsp;and&nbsp;task&nbsp;objects<br>
+--<br>
+&nbsp;<br>
+Author(s)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Philip&nbsp;Skinner&nbsp;(philip@crowdca.lc)<br>
+Last&nbsp;modified&nbsp;&nbsp;&nbsp;-&nbsp;2014-08-24<br>
+&nbsp;<br>
+This&nbsp;program&nbsp;is&nbsp;free&nbsp;software:&nbsp;you&nbsp;can&nbsp;redistribute&nbsp;it&nbsp;and/or&nbsp;modify<br>
+it&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;as&nbsp;published&nbsp;by<br>
+the&nbsp;Free&nbsp;Software&nbsp;Foundation,&nbsp;either&nbsp;version&nbsp;3&nbsp;of&nbsp;the&nbsp;License,&nbsp;or<br>
+(at&nbsp;your&nbsp;option)&nbsp;any&nbsp;later&nbsp;version.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+This&nbsp;program&nbsp;is&nbsp;distributed&nbsp;in&nbsp;the&nbsp;hope&nbsp;that&nbsp;it&nbsp;will&nbsp;be&nbsp;useful,<br>
+but&nbsp;WITHOUT&nbsp;ANY&nbsp;WARRANTY;&nbsp;without&nbsp;even&nbsp;the&nbsp;implied&nbsp;warranty&nbsp;of<br>
+MERCHANTABILITY&nbsp;or&nbsp;FITNESS&nbsp;FOR&nbsp;A&nbsp;PARTICULAR&nbsp;PURPOSE.&nbsp;&nbsp;See&nbsp;the<br>
+GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;for&nbsp;more&nbsp;details.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+You&nbsp;should&nbsp;have&nbsp;received&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License<br>
+along&nbsp;with&nbsp;this&nbsp;program.&nbsp;&nbsp;If&nbsp;not,&nbsp;see&nbsp;&lt;<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.<br>
+&nbsp;<br>
+Copyright&nbsp;(c)&nbsp;2014,&nbsp;Crowdcalc&nbsp;B.V.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="httplib2.html">httplib2</a><br>
+</td><td width="25%" valign=top><a href="simplejson.html">simplejson</a><br>
+</td><td width="25%" valign=top><a href="urllib.html">urllib</a><br>
+</td><td width="25%" valign=top><a href="urllib2.html">urllib2</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="reorjs.html#ReorJS">ReorJS</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ReorJS">class <strong>ReorJS</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Provides&nbsp;simple&nbsp;programmatic&nbsp;access&nbsp;to&nbsp;the&nbsp;<a href="#ReorJS">ReorJS</a>&nbsp;server&nbsp;for&nbsp;API&nbsp;calls.<br>
+&nbsp;<br>
+&lt;code&gt;<br>
+import&nbsp;reorjs<br>
+api&nbsp;=&nbsp;reorjs.<a href="#ReorJS">ReorJS</a>()<br>
+api.<a href="#ReorJS-setHost">setHost</a>('<a href="http://localhost:9999">http://localhost:9999</a>')<br>
+api.<a href="#ReorJS-setKey">setKey</a>('temporary')<br>
+print&nbsp;api.<a href="#ReorJS-listApplications">listApplications</a>()<br>
+&lt;/code&gt;<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ReorJS-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Construct&nbsp;a&nbsp;new&nbsp;<a href="#ReorJS">ReorJS</a>&nbsp;object&nbsp;with&nbsp;default&nbsp;values</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-connectionTest"><strong>connectionTest</strong></a>(self)</dt><dd><tt>Attempts&nbsp;to&nbsp;test&nbsp;the&nbsp;connection&nbsp;to&nbsp;the&nbsp;ReorJSd&nbsp;service</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-createApplication"><strong>createApplication</strong></a>(self, name<font color="#909090">=None</font>, program<font color="#909090">=None</font>)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;application.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-createDataset"><strong>createDataset</strong></a>(self, name<font color="#909090">=None</font>, source_type<font color="#909090">=None</font>, source_hostname<font color="#909090">=None</font>, source_port<font color="#909090">=None</font>, source_name<font color="#909090">=None</font>, source_table<font color="#909090">=None</font>, source_username<font color="#909090">=None</font>, source_password<font color="#909090">=None</font>)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;dataset&nbsp;(or&nbsp;source)&nbsp;in&nbsp;the&nbsp;system.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-createTask"><strong>createTask</strong></a>(self, application<font color="#909090">=None</font>, dataset<font color="#909090">=None</font>, result<font color="#909090">=None</font>)</dt><dd><tt>Creates&nbsp;a&nbsp;task&nbsp;in&nbsp;the&nbsp;system.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-deleteApplication"><strong>deleteApplication</strong></a>(self, id<font color="#909090">=None</font>)</dt><dd><tt>Deletes&nbsp;an&nbsp;application.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-deleteDataset"><strong>deleteDataset</strong></a>(self, id<font color="#909090">=None</font>)</dt><dd><tt>Deletes&nbsp;a&nbsp;dataset.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-detailApplication"><strong>detailApplication</strong></a>(self, id<font color="#909090">=None</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;details&nbsp;for&nbsp;an&nbsp;application.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-detailDataset"><strong>detailDataset</strong></a>(self, id<font color="#909090">=None</font>)</dt><dd><tt>Returns&nbsp;details&nbsp;for&nbsp;a&nbsp;dataset.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-detailTask"><strong>detailTask</strong></a>(self, id<font color="#909090">=None</font>)</dt><dd><tt>Returns&nbsp;details&nbsp;for&nbsp;a&nbsp;particular&nbsp;task&nbsp;in&nbsp;the&nbsp;system.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-listApplications"><strong>listApplications</strong></a>(self)</dt><dd><tt>Lists&nbsp;all&nbsp;of&nbsp;the&nbsp;applications</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-listDatasets"><strong>listDatasets</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;datasets&nbsp;in&nbsp;the&nbsp;system.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-listTasks"><strong>listTasks</strong></a>(self)</dt><dd><tt>Lists&nbsp;all&nbsp;of&nbsp;the&nbsp;tasks&nbsp;currently&nbsp;in&nbsp;the&nbsp;system.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-modifyApplication"><strong>modifyApplication</strong></a>(self, id<font color="#909090">=None</font>, name<font color="#909090">=None</font>, program<font color="#909090">=None</font>)</dt><dd><tt>Modifies&nbsp;an&nbsp;application.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-modifyDataset"><strong>modifyDataset</strong></a>(self, id<font color="#909090">=None</font>, name<font color="#909090">=None</font>, source_type<font color="#909090">=None</font>, source_hostname<font color="#909090">=None</font>, source_port<font color="#909090">=None</font>, source_name<font color="#909090">=None</font>, source_table<font color="#909090">=None</font>, source_username<font color="#909090">=None</font>, source_password<font color="#909090">=None</font>)</dt><dd><tt>Modifies&nbsp;an&nbsp;existing&nbsp;dataset.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-ping"><strong>ping</strong></a>(self)</dt><dd><tt>Pings&nbsp;the&nbsp;output&nbsp;service.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-setHost"><strong>setHost</strong></a>(self, host)</dt><dd><tt>Sets&nbsp;the&nbsp;ReorJSd&nbsp;host&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;requests.<br>
+&nbsp;<br>
+Needs&nbsp;to&nbsp;be&nbsp;in&nbsp;the&nbsp;format:<br>
+&nbsp;<br>
+<a href="http://[host]:[port">http://[host]:[port</a>]</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-setKey"><strong>setKey</strong></a>(self, key)</dt><dd><tt>Sets&nbsp;the&nbsp;access&nbsp;key&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;authentication.</tt></dd></dl>
+
+<dl><dt><a name="ReorJS-status"><strong>status</strong></a>(self)</dt><dd><tt>Fetches&nbsp;the&nbsp;current&nbsp;status&nbsp;of&nbsp;the&nbsp;stacker&nbsp;system.</tt></dd></dl>
+
+</td></tr></table></td></tr></table>
+</body></html>
