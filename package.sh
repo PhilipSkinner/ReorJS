@@ -130,6 +130,34 @@ case "$1" in
 		rm -rf "packages/reorjs-$2"
 		rm -rf "packages/reorjs-$2.tar.gz"
 	        ;;
+	libs)
+		echo "Starting construction of $2 libs"
+		echo "Will create version $3"
+		
+		echo "Moving current version to old dir"
+		mv "packages/libs/reorjs-$2"* "packages/old/libs"
+		
+		echo "Creating temporary directory"
+		mkdir "packages/reorjs-$2-$3"
+		
+		echo "Copying files"
+		cp -r -L "lib/$2/"* "packages/reorjs-$2-$3/"
+		
+		echo "Tarballing package"
+		cd packages && tar -czf "reorjs-$2-$3.tar.gz" "reorjs-$2-$3"
+		
+		echo "Package reorjs-$2-$3 created!"
+		
+		echo "Removing copy"
+		
+		cd ../ && rm -rf "packages/reorjs-$2-$3"
+		
+		echo "Moving to libs"
+		
+		mv "packages/reorjs-$2-$3.tar.gz" "packages/libs/"
+		
+		echo "Build completed"		
+		;;
 	*)
 		echo "Unknown command given"
 		;;
