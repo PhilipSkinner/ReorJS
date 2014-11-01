@@ -1,0 +1,188 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+
+<ul id="index">
+  <li><a href="#ReorJS.pm---Simple-ReorJS-Api-connector">ReorJS.pm - Simple ReorJS Api connector</a>
+    <ul>
+      <li><a href="#Methods">Methods</a></li>
+    </ul>
+  </li>
+  <li><a href="#POD-ERRORS">POD ERRORS</a></li>
+</ul>
+
+<h1 id="ReorJS.pm---Simple-ReorJS-Api-connector">ReorJS.pm - Simple ReorJS Api connector</h1>
+
+<p>-- Provides simple programmatic access to the ReorJS server API calls for managing ReorJS application, dataset and task objects --</p>
+
+<p>Author(s) - Philip Skinner (philip@crowdca.lc) Last modified - 2014-11-01</p>
+
+<p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+
+<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
+
+<p>You should have received a copy of the GNU General Public License along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.</p>
+
+<p>Copyright (c) 2014, Crowdcalc B.V.</p>
+
+<p>&lt;code&gt; use ReorJS;</p>
+
+<p>my $reorjs = ReorJS-&gt;new(); $reorjs-&gt;setHost(&#39;localhost&#39;); $reorjs-&gt;setPort(&#39;9999&#39;); $reorjs-&gt;setKey(&#39;temporary&#39;);</p>
+
+<p>my $applications = $reorjs-&gt;listApplications(); &lt;/code&gt;</p>
+
+<h2 id="Methods">Methods</h2>
+
+<dl>
+
+<dt id="ReorJS-new-">ReorJS-&gt;new()</dt>
+<dd>
+
+<p>Creates a new ReorJS API connector object.</p>
+
+<p>Can receive optional hash of parameters. Supported parameters are:</p>
+
+<p>* host * port * key</p>
+
+</dd>
+<dt id="reorjs-setHost-hostname-">$reorjs-&gt;setHost($hostname)</dt>
+<dd>
+
+<p>Sets the reorjsd hostname to be used for requests</p>
+
+</dd>
+<dt id="reorjs-setPort-port-">$reorjs-&gt;setPort($port)</dt>
+<dd>
+
+<p>Sets the port to be used for communication</p>
+
+</dd>
+<dt id="reorjs-setKey-key-">$reorjs-&gt;setKey($key)</dt>
+<dd>
+
+<p>Sets the access key to be used for authentication</p>
+
+</dd>
+<dt id="reorjs-detailTask-id-">$reorjs-&gt;detailTask($id)</dt>
+<dd>
+
+<p>Returns details for a particular task in the system</p>
+
+</dd>
+<dt id="reorjs-createTask-params-">$reorjs-&gt;createTask($params)</dt>
+<dd>
+
+<p>Creates a task in the system</p>
+
+<p>Receives a hash of parameters. Supported parameters are:</p>
+
+<p>* application * dataset * result</p>
+
+</dd>
+<dt id="reorjs-listTasks-">$reorjs-&gt;listTasks()</dt>
+<dd>
+
+<p>Lists all of the tasks currently in the system</p>
+
+</dd>
+<dt id="reorjs-createDataset-params-">$reorjs-&gt;createDataset($params)</dt>
+<dd>
+
+<p>Creates a new dataset (or source) in the system</p>
+
+<p>Receives a hash of parameters. Supported parameters are:</p>
+
+<p>* name * source_type * source_hostname * source_port * source_name * source_table * source_username * source_password</p>
+
+</dd>
+<dt id="reorjs-modifyDataset-id-params-">$reorjs-&gt;modifyDataset($id, $params)</dt>
+<dd>
+
+<p>Modifies an existing dataset</p>
+
+<p>Receives a hash of parameters. Supported parameters are:</p>
+
+<p>* name * source_type * source_hostname * source_port * source_name * source_table * source_username * source_password</p>
+
+</dd>
+<dt id="reorjs-deleteDataset-id-">$reorjs-&gt;deleteDataset($id)</dt>
+<dd>
+
+<p>Deletes a dataset</p>
+
+</dd>
+<dt id="reorjs-detailDataset-id-">$reorjs-&gt;detailDataset($id)</dt>
+<dd>
+
+<p>Returns the details for a dataset</p>
+
+</dd>
+<dt id="reorjs-listDatasets-params-">$reorjs-&gt;listDatasets($params)</dt>
+<dd>
+
+<p>Returns a list of datasets in the system</p>
+
+</dd>
+<dt id="reorjs-createApplication-params-">$reorjs-&gt;createApplication($params)</dt>
+<dd>
+
+<p>Creates a new application</p>
+
+<p>Receives a hash of parameters. Supported parameters are:</p>
+
+<p>* name * program</p>
+
+</dd>
+<dt id="reorjs-modifyApplication-id-params-">$reorjs-&gt;modifyApplication($id, $params)</dt>
+<dd>
+
+<p>Modifies an application</p>
+
+<p>Receives a hash of parameters. Supported parameters are:</p>
+
+<p>* name * program</p>
+
+</dd>
+<dt id="reorjs-deleteApplication-id-">$reorjs-&gt;deleteApplication($id)</dt>
+<dd>
+
+<p>Deletes an application</p>
+
+</dd>
+<dt id="reorjs-listApplications-params-">$reorjs-&gt;listApplications($params)</dt>
+<dd>
+
+<p>Lists all of the applications</p>
+
+</dd>
+</dl>
+
+<h1 id="POD-ERRORS">POD ERRORS</h1>
+
+<p>Hey! <b>The above document had some coding errors, which are explained below:</b></p>
+
+<dl>
+
+<dt id="Around-line-50:">Around line 50:</dt>
+<dd>
+
+<p>&#39;=item&#39; outside of any &#39;=over&#39;</p>
+
+</dd>
+</dl>
+
+
+</body>
+
+</html>
+
+
