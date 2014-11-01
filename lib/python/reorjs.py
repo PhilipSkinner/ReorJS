@@ -32,18 +32,45 @@ import httplib2
 import simplejson as json
 
 class ReorJS():
+	"""
+	Provides simple programmatic access to the ReorJS server for API calls.
+	
+	<code>
+	import reorjs
+	api = reorjs.ReorJS()
+	api.setHost('http://localhost:9999')
+	api.setKey('temporary')
+	print api.listApplications()
+	</code>		
+	"""
+
 	def __init__(self):
+		"""
+		Construct a new ReorJS object with default values
+		"""	
 		self.host = 'http://localhost:9999' #default
 		self.key = ''
-	
-	
+		
 	def setHost(self, host):
+		"""
+		Sets the ReorJSd host to be used for requests.
+		
+		Needs to be in the format:
+		
+		http://[host]:[port]
+		"""
 		self.host = host
 	
 	def setKey(self, key):
+		"""
+		Sets the access key to be used for authentication.
+		"""
 		self.key = key
 		
 	def connectionTest(self):
+		"""
+		Attempts to test the connection to the ReorJSd service
+		"""
 		#simply connect to the server
 		try:
 			response = urllib2.urlopen(self.host + '/output/v1/ping?key=%s' % self.key)
@@ -55,20 +82,10 @@ class ReorJS():
 		
 		return False
 	
-	def checkData(self, data):
-		if 'meta' in data:
-			if 'code' in data['meta']:
-				if str(data['meta']['code']) == '200':
-					if 'data' in data:
-						return data['data']
-					elif 'status' in data:
-						return data
-				else:
-					if 'error' in data:
-						return { 'error' : data['error'], 'code' : data['meta']['code'] }
-		return []
-
 	def detailTask(self, id=None):
+		"""
+		Returns details for a particular task in the system.
+		"""
 		try:
 			response = urllib2.urlopen(self.host + '/api/v1/task/%s?key=%s' % (id, self.key))
 			
@@ -84,6 +101,9 @@ class ReorJS():
 		return {}
 	
 	def createTask(self, application=None, dataset=None, result=None):
+		"""
+		Creates a task in the system.
+		"""
 		try:
 			connection = httplib2.Http()		       
 			url = self.host + '/api/v1/task'                      
@@ -104,6 +124,9 @@ class ReorJS():
 		return {}
 
 	def listTasks(self):
+		"""
+		Lists all of the tasks currently in the system.
+		"""
 		try:
 			response = urllib2.urlopen(self.host + '/api/v1/task?key=%s' % (self.key))
 			
@@ -119,6 +142,9 @@ class ReorJS():
 		return []
 
 	def createDataset(self, name=None, source_type=None, source_hostname=None, source_port=None, source_name=None, source_table=None, source_username=None, source_password=None):
+		"""
+		Creates a new dataset (or source) in the system.
+		"""
 		try:
 			connection = httplib2.Http()		       
 			url = self.host + '/api/v1/dataset'                       
@@ -146,6 +172,9 @@ class ReorJS():
 		return {}
 
 	def modifyDataset(self, id=None, name=None, source_type=None, source_hostname=None, source_port=None, source_name=None, source_table=None, source_username=None, source_password=None):
+		"""
+		Modifies an existing dataset.
+		"""
 		try:
 			connection = httplib2.Http()		       
 			url = self.host + '/api/v1/dataset/%s' % id
@@ -173,6 +202,9 @@ class ReorJS():
 		return {}
 
 	def deleteDataset(self, id=None):
+		"""
+		Deletes a dataset.
+		"""
 		try:
 			connection = httplib2.Http()
 			url = self.host + '/api/v1/dataset/%s?key=%s' % (id, self.key)
@@ -187,6 +219,9 @@ class ReorJS():
 		return {}
 
 	def detailDataset(self, id=None):
+		"""
+		Returns details for a dataset.
+		"""
 		try:
 			response = urllib2.urlopen(self.host + '/api/v1/dataset/%s?key=%s' % (id, self.key))
 			
@@ -202,6 +237,9 @@ class ReorJS():
 		return {}
 	
 	def listDatasets(self):
+		"""
+		Returns a list of the datasets in the system.
+		"""
 		try:
 			response = urllib2.urlopen(self.host + '/api/v1/dataset?key=%s' % (self.key))
 			
@@ -217,6 +255,9 @@ class ReorJS():
 		return []
 	
 	def createApplication(self, name=None, program=None):
+		"""
+		Creates a new application.
+		"""
 		try:
 			connection = httplib2.Http()		       
 			url = self.host + '/api/v1/application'                       
@@ -238,6 +279,9 @@ class ReorJS():
 		return {}
 		
 	def modifyApplication(self, id=None, name=None, program=None):
+		"""
+		Modifies an application.
+		"""
 		try:
 			connection = httplib2.Http()
 			url = self.host + '/api/v1/application/%s' % id
@@ -259,6 +303,9 @@ class ReorJS():
 		return {}
 
 	def deleteApplication(self, id=None):
+		"""
+		Deletes an application.
+		"""
 		try:
 			connection = httplib2.Http()
 			url = self.host + '/api/v1/application/%s?key=%s' % (id, self.key)
@@ -274,6 +321,9 @@ class ReorJS():
 		return {}
 
 	def detailApplication(self, id=None):
+		"""
+		Returns the details for an application.
+		"""
 		try:
 			response = urllib2.urlopen(self.host + '/api/v1/application/%s?key=%s' % (id, self.key))
 			
@@ -289,6 +339,9 @@ class ReorJS():
 		return {}
 
 	def listApplications(self):
+		"""
+		Lists all of the applications
+		"""
 		try:
 			response = urllib2.urlopen(self.host + '/api/v1/application?key=%s' % self.key)
 			
@@ -304,6 +357,9 @@ class ReorJS():
 		return []
 	
 	def ping(self):
+		"""
+		Pings the output service.
+		"""
 		try:
 			response = urllib2.urlopen(self.host + '/output/v1/ping?key=%s' % self.key)
 			
@@ -322,6 +378,9 @@ class ReorJS():
 		return { 'error' : 'Could not reach output service', 'code' : '9002' }
 
 	def status(self):
+		"""
+		Fetches the current status of the stacker system.
+		"""
 		try:
 			response = urllib2.urlopen(self.host + '/output/v1/status?key=%s' % self.key)
 			
@@ -335,3 +394,16 @@ class ReorJS():
 			pass
 		
 		return {}
+
+	def _checkData(self, data):	
+		if 'meta' in data:
+			if 'code' in data['meta']:
+				if str(data['meta']['code']) == '200':
+					if 'data' in data:
+						return data['data']
+					elif 'status' in data:
+						return data
+				else:
+					if 'error' in data:
+						return { 'error' : data['error'], 'code' : data['meta']['code'] }
+		return []
