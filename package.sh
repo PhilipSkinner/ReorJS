@@ -143,6 +143,7 @@ case "$1" in
 		echo "Cleaning source directory"
 		rm -rf "lib/$2/"*~
 		rm -rf "lib/$2/"*.pyc
+		rm -rf "lib/$2/"*.tmp
 		
 		echo "Copying files"
 		cp -r -L "lib/$2/"* "packages/reorjs-$2-$3/"
