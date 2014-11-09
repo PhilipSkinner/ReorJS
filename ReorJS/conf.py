@@ -28,7 +28,7 @@
 
 import argparse
 try:
-	import configparser as configparser
+	import ConfigParser as configparser
 except:
 	import configparser
 import socket
@@ -40,31 +40,31 @@ def configure():
 	conf_parser.add_argument('--config', default='/etc/reorjs/reorjsd.conf', help='Configuration file - see config format in docs')
 	args, remaining_argv = conf_parser.parse_known_args()
 	defaults = {
-	       'log-location' 	: '/var/log/reorjs',
-	       'verbose' 	: False,
-	       'debug' 		: False,
-	       'reg-host' 	: None,
-	       'reg-port' 	: '9999',
-	       'port' 		: '9999',
-	       'ip' 		: socket.gethostbyname(socket.gethostname()),
-	       'server' 	: 'tornado',
-	       'db-type' 	: 'redis',
-	       'redis-sock' 	: '/tmp/redis.sock',
-	       'redis-host' 	: 'localhost',
-	       'redis-port' 	: '8989',
-	       'mongo-name' 	: 'reorjs',
-	       'mongo-host' 	: 'localhost',
-	       'mongo-port' 	: '27017',
-	       'mongo-read' 	: 'secondaryPreferred',
-	       'mysql-name' 	: 'reorjs',
-	       'mysql-host' 	: 'localhost',
-	       'mysql-port' 	: '3306',
-	       'mysql-user' 	: 'reorjs',
-	       'mysql-password' : 'reorjs',
-	       'blocksize' 	: '100',
-	       'tasklimit' 	: '15',
-	       'readmethod' 	: '1',
-	       'root-key'	: None,
+		'log-location' 	: '/var/log/reorjs',
+		'verbose' 	: False,
+		'debug' 		: False,
+		'reg-host' 	: None,
+		'reg-port' 	: '9999',
+		'port' 		: '9999',
+		'ip' 		: socket.gethostbyname(socket.gethostname()),
+		'server' 	: 'tornado',
+		'db-type' 	: 'redis',
+		'redis-sock' 	: '/tmp/redis.sock',
+		'redis-host' 	: 'localhost',
+		'redis-port' 	: '8989',
+		'mongo-name' 	: 'reorjs',
+		'mongo-host' 	: 'localhost',
+		'mongo-port' 	: '27017',
+		'mongo-read' 	: 'secondaryPreferred',
+		'mysql-name' 	: 'reorjs',
+		'mysql-host' 	: 'localhost',
+		'mysql-port' 	: '3306',
+		'mysql-user' 	: 'reorjs',
+		'mysql-password' : 'reorjs',
+		'blocksize' 	: '100',
+		'tasklimit' 	: '15',
+		'readmethod' 	: '1',
+		'root-key'	: None,
 	}
 
 	#do we have a conf file?

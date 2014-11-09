@@ -29,6 +29,15 @@
 import os
 import sys
 
+
+try:
+	# safe for python 2
+	do_input = raw_input
+except:
+	# safe for python 3
+	do_input = input
+
+
 def configure():
 	header('Welcome to the ReorJS Configuration Tool')
 	print("This tool will now proceed to read your systems configuration and generate the relevant installation scripts.\n")
@@ -68,10 +77,6 @@ def configure():
 			'libname' : 'urllib',
 		},
 		{
-			'name' : 'urllib2',
-			'libname' : 'urllib2',
-		},
-		{
 			'name' : 'httplib2',
 			'libname' : 'httplib2',
 		},
@@ -82,7 +87,7 @@ def configure():
 	])
 
 	configuration['cli']['proceed'] = True
-	all = ['cmd', 'shlex', 'prettytable', 'urllib', 'urllib2', 'httplib2', 'simplejson']
+	all = ['cmd', 'shlex', 'prettytable', 'urllib', 'httplib2', 'simplejson']
 	for a in all:
 		if a not in exists:
 			configuration['cli']['issues'].append('Missing requirement %s' % a)
@@ -120,7 +125,7 @@ def configure():
 
 	yes_no = None
 	while yes_no != 'N' and yes_no != 'Y':
-		yes_no = input('Continue and create installation scripts? (Y,N) ').upper()
+		yes_no = do_input('Continue and create installation scripts? (Y,N) ').upper()
 
 	if yes_no == 'Y':
 		if configuration['cli']['proceed']:
