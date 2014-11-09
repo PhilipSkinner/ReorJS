@@ -69,7 +69,7 @@ class ReorJSCLI(cmd.Cmd):
       self.api.setHost(details[0])
       self.api.setKey(details[1])
 
-      print "API configured. To test connection type connect test."
+      print("API configured. To test connection type connect test.")
   
   def help_connect(self):
     self.bad("Usage: connect http://[host]:[port] [apikey]")
@@ -444,8 +444,8 @@ class ReorJSCLI(cmd.Cmd):
     if 'error' in hash:
       return self.doStatus(hash)
   
-    for k, v in hash.iteritems():
-      print bcolors.HEADER + k + bcolors.ENDC + '\t\t: ' + str(v)
+    for k, v in hash.items():
+      print(bcolors.HEADER + k + bcolors.ENDC + '\t\t: ' + str(v))
   
   def doTable(self, hash):
     table = None
@@ -459,12 +459,12 @@ class ReorJSCLI(cmd.Cmd):
     for rec in hash:
       if rec != None:
         if table == None:
-          cols = rec.keys()
+          cols = list(rec.keys())
           cols = [bcolors.HEADER + c + bcolors.ENDC for c in cols]
           table = PrettyTable(cols)
 
         vals = []
-        for v in rec.values():
+        for v in list(rec.values()):
           try:
             if len(v) > 100:
               v = '%s...' % v[:100]
@@ -475,7 +475,7 @@ class ReorJSCLI(cmd.Cmd):
 
         table.add_row(vals)
       
-    print table    
+    print(table)    
     
   def doStatus(self, status):
     code = '9999'
@@ -502,22 +502,22 @@ class ReorJSCLI(cmd.Cmd):
     return
   
   def normal(self, line):
-    print line
+    print(line)
   
   def header(self, line):
-    print bcolors.HEADER + line + bcolors.ENDC
+    print(bcolors.HEADER + line + bcolors.ENDC)
   
   def bad(self, line):
-    print bcolors.WARNING + line + bcolors.ENDC
+    print(bcolors.WARNING + line + bcolors.ENDC)
   
   def error(self, line):
-    print bcolors.FAIL + line + bcolors.ENDC
+    print(bcolors.FAIL + line + bcolors.ENDC)
   
   def good(self, line):
-    print bcolors.OKGREEN + line + bcolors.ENDC
+    print(bcolors.OKGREEN + line + bcolors.ENDC)
   
   def info(self, line):
-    print bcolors.OKBLUE + line + bcolors.ENDC
+    print(bcolors.OKBLUE + line + bcolors.ENDC)
 
 if __name__ == '__main__':  
   ReorJSCLI().cmdloop()

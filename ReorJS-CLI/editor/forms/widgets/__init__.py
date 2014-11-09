@@ -1,2 +1,2 @@
-from datalist import *
-from jseditor import *
+from .datalist import *
+from .jseditor import *

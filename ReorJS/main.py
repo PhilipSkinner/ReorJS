@@ -1,33 +1,33 @@
 """
-        main.py
+	main.py
 	ReorJSd - Distributed Javascript Compute Engine
-        
-        --
+
+		--
 	ReorJSd allows you to setup your own distributed javascript compute
 	cluster, allowing you to harness the computational power of any
 	compute you can connect to it.
 
 	For more information see the ReorJS documentation or visit our website
 	http://reorjs.com.
-        --
-        
-        Author(s)       - Philip Skinner (philip@crowdca.lc)
-        Last modified   - 2014-09-28
-        
-        This program is free software: you can redistribute it and/or modify
-        it under the terms of the GNU General Public License as published by
-        the Free Software Foundation, either version 3 of the License, or
-        (at your option) any later version.
-            
-        This program is distributed in the hope that it will be useful,     
-        but WITHOUT ANY WARRANTY; without even the implied warranty of      
-        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-        GNU General Public License for more details.
-                 
-        You should have received a copy of the GNU General Public License
-        along with this program.  If not, see <http://www.gnu.org/licenses/>.
-        
-        Copyright (c) 2014, Crowdcalc B.V.
+	--
+
+	Author(s)       - Philip Skinner (philip@crowdca.lc)
+	Last modified   - 2014-09-28
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+	Copyright (c) 2014, Crowdcalc B.V.
 """
 
 import conf
@@ -41,7 +41,7 @@ import logger
 
 def main():
 	config = conf.configure()
-	
+
 	#now configure our settings global
 	set_setting('LOG_LOCATION',		config.log_location)
 	set_setting('DEBUG', 			config.debug)
@@ -95,32 +95,32 @@ def main():
 	logger.LOG.info('MYSQL_PASSWORD		=> %s' % settings.MYSQL_PASSWORD)
 	logger.LOG.info('HTTP_SERVICE		=> %s' % settings.HTTP_SERVICE)
 	logger.LOG.info('ROOT_KEY		=> %s' % settings.ROOT_KEY)
-	
+
 	#we need to configure our API database from settings
-	if api.connect():	
-		#and then our stacker		
+	if api.connect():
+		#and then our stacker
 		logger.LOG.log('Initializing stacker')
 		stack.initStacker()
-		
+
 		#next we need to create our query service
 		logger.LOG.log('Initializing query service')
 		service = query.QueryService()
-		
+
 		#and run it
 		logger.LOG.log('Running service...')
-		service.run()		
+		service.run()
 	else:
 		logger.LOG.log("Error connecting to API database, please check configuration.")
-	
+
 
 def set_setting(name, value):
 	if settings.VERBOSE:
 		logger.LOG.log('Setting system variable %s to value %s' % (name, value))
-		
+
 	setattr(settings, name, value)
-	
+
 def sigHandler(signal, frame):
-	logger.LOG.log('ReorJS service exiting')	
+	logger.LOG.log('ReorJS service exiting')
 	sys.exit(0)
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import npyscreen
 import curses
 
-from forms import *
+from .forms import *
 
 class EditorApp(npyscreen.NPSAppManaged):
   _THISFORM = None

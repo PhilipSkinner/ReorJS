@@ -1,3 +1,3 @@
-from dataform import *
-from editor import *
-from run import *
+from .dataform import *
+from .editor import *
+from .run import *
