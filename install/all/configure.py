@@ -87,7 +87,7 @@ def configure():
 		},
 		{
 			'name' : 'MySQL',
-			'libname' : 'pymsql',
+			'libname' : 'pymysql',
 		},
 		{
 			'name' : 'Mongo',
