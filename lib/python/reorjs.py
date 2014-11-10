@@ -26,8 +26,13 @@
 	Copyright (c) 2014, Crowdcalc B.V.
 """
 
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
+try:
+	from urllib.request import urlopen # 3
+	from urllib.parse import urlencode # 3
+except: 
+	from urllib2 import urlopen # 2
+	from urllib import urlencode # 2
+
 import httplib2
 import simplejson as json
 
@@ -73,7 +78,7 @@ class ReorJS():
 		"""
 		#simply connect to the server
 		try:
-			response = urllib.request.urlopen(self.host + '/output/v1/ping?key=%s' % self.key)
+			response = urlopen(self.host + '/output/v1/ping?key=%s' % self.key)
 
 			if response.getcode() == 200:
 				return True
@@ -87,7 +92,7 @@ class ReorJS():
 		Returns details for a particular task in the system.
 		"""
 		try:
-			response = urllib.request.urlopen(self.host + '/api/v1/task/%s?key=%s' % (id, self.key))
+			response = urlopen(self.host + '/api/v1/task/%s?key=%s' % (id, self.key))
 
 			if response.getcode() == 200:
 				raw = response.read()
@@ -107,7 +112,7 @@ class ReorJS():
 		try:
 			connection = httplib2.Http()
 			url = self.host + '/api/v1/task'
-			body = urllib.parse.urlencode({
+			body = urlencode({
 				'application' : application,
 				'dataset' : dataset,
 				'result' : result,
@@ -128,7 +133,7 @@ class ReorJS():
 		Lists all of the tasks currently in the system.
 		"""
 		try:
-			response = urllib.request.urlopen(self.host + '/api/v1/task?key=%s' % (self.key))
+			response = urlopen(self.host + '/api/v1/task?key=%s' % (self.key))
 
 			if response.getcode() == 200:
 				raw = response.read()
@@ -149,7 +154,7 @@ class ReorJS():
 			connection = httplib2.Http()
 			url = self.host + '/api/v1/dataset'
 
-			body = urllib.parse.urlencode({
+			body = urlencode({
 				'name'			: name,
 				'source_type' 		: source_type,
 				'source_hostname' 	: source_hostname,
@@ -179,7 +184,7 @@ class ReorJS():
 			connection = httplib2.Http()
 			url = self.host + '/api/v1/dataset/%s' % id
 
-			body = urllib.parse.urlencode({
+			body = urlencode({
 				'name'			: name,
 				'source_type' 		: source_type,
 				'source_hostname' 	: source_hostname,
@@ -223,7 +228,7 @@ class ReorJS():
 		Returns details for a dataset.
 		"""
 		try:
-			response = urllib.request.urlopen(self.host + '/api/v1/dataset/%s?key=%s' % (id, self.key))
+			response = urlopen(self.host + '/api/v1/dataset/%s?key=%s' % (id, self.key))
 
 			if response.getcode() == 200:
 				raw = response.read()
@@ -241,7 +246,7 @@ class ReorJS():
 		Returns a list of the datasets in the system.
 		"""
 		try:
-			response = urllib.request.urlopen(self.host + '/api/v1/dataset?key=%s' % (self.key))
+			response = urlopen(self.host + '/api/v1/dataset?key=%s' % (self.key))
 
 			if response.getcode() == 200:
 				raw = response.read()
@@ -262,7 +267,7 @@ class ReorJS():
 			connection = httplib2.Http()
 			url = self.host + '/api/v1/application'
 
-			body = urllib.parse.urlencode({
+			body = urlencode({
 				'name'		: name,
 				'program'	: program,
 				'key'		: self.key,
@@ -286,7 +291,7 @@ class ReorJS():
 			connection = httplib2.Http()
 			url = self.host + '/api/v1/application/%s' % id
 
-			body = urllib.parse.urlencode({
+			body = urlencode({
 				'name'		: name,
 				'program'	: program,
 				'key'		: self.key,
@@ -325,7 +330,7 @@ class ReorJS():
 		Returns the details for an application.
 		"""
 		try:
-			response = urllib.request.urlopen(self.host + '/api/v1/application/%s?key=%s' % (id, self.key))
+			response = urlopen(self.host + '/api/v1/application/%s?key=%s' % (id, self.key))
 
 			if response.getcode() == 200:
 				raw = response.read()
@@ -343,7 +348,7 @@ class ReorJS():
 		Lists all of the applications
 		"""
 		try:
-			response = urllib.request.urlopen(self.host + '/api/v1/application?key=%s' % self.key)
+			response = urlopen(self.host + '/api/v1/application?key=%s' % self.key)
 
 			if response.getcode() == 200:
 				raw = response.read()
@@ -361,7 +366,7 @@ class ReorJS():
 		Pings the output service.
 		"""
 		try:
-			response = urllib.request.urlopen(self.host + '/output/v1/ping?key=%s' % self.key)
+			response = urlopen(self.host + '/output/v1/ping?key=%s' % self.key)
 
 			if response.getcode() == 200:
 				raw = response.read()
@@ -382,7 +387,7 @@ class ReorJS():
 		Fetches the current status of the stacker system.
 		"""
 		try:
-			response = urllib.request.urlopen(self.host + '/output/v1/status?key=%s' % self.key)
+			response = urlopen(self.host + '/output/v1/status?key=%s' % self.key)
 
 			if response.getcode() == 200:
 				raw = response.read()
