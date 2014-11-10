@@ -87,7 +87,7 @@ def configure():
 		},
 		{
 			'name' : 'MySQL',
-			'libname' : 'MySQLdb',
+			'libname' : 'pymsql',
 		},
 		{
 			'name' : 'Mongo',
@@ -148,9 +148,9 @@ def configure():
 		configuration['reorjs']['tornado'] = True
 		configuration['reorjs']['fapws'] = True
 
-	if 'MySQLdb' not in exists and ('pymongo' not in exists or 'bson' not in exists):
+	if 'pymysql' not in exists and ('pymongo' not in exists or 'bson' not in exists):
 		configuration['reorjs']['proceed'] = False
-		configuration['reorjs']['issues'].append('Missing either MySQLdb or pymongo and bson requirements')
+		configuration['reorjs']['issues'].append('Missing either pymysql or pymongo and bson requirements')
 	else:
 		configuration['reorjs']['mongo'] = True
 		configuration['reorjs']['mysql'] = True

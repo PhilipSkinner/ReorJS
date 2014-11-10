@@ -26,7 +26,7 @@
 """
 
 from . import base
-import MySQLdb as mdb
+import pymysql as mdb
 import getpass
 import logger
 

@@ -90,7 +90,7 @@ class APIDB():
 			logger.LOG.log("Connecting to mysql")
 
 			try:
-				import MySQLdb as mdb
+				import pymysql as mdb
 
 				self._dbconnection = mdb.connect(settings.MYSQL_HOST, settings.MYSQL_USER, settings.MYSQL_PASSWORD, settings.MYSQL_NAME)
 			except:
