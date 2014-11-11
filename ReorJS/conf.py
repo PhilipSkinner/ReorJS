@@ -72,7 +72,7 @@ def configure():
 		#read the config file
 		config = configparser.SafeConfigParser()
 		config.read([args.config])
-		newDefaults = dict(config.items("DEFAULT"))
+		newDefaults = dict(config.items("Defaults"))
 		for k, v in newDefaults.items():
 			defaults[k] = v
 
