@@ -29,7 +29,7 @@
 try:
 	from urllib.request import urlopen # 3
 	from urllib.parse import urlencode # 3
-except: 
+except:
 	from urllib2 import urlopen # 2
 	from urllib import urlencode # 2
 
@@ -400,7 +400,7 @@ class ReorJS():
 
 		return {}
 
-	def _checkData(self, data):
+	def checkData(self, data):
 		if 'meta' in data:
 			if 'code' in data['meta']:
 				if str(data['meta']['code']) == '200':

@@ -29,11 +29,20 @@
 from .base import BaseQueryService
 import settings
 import logger
-from urllib.parse import urlparse
+try:
+	from urllib.parse import urlparse # python 3
+except:
+	from urlparse import urlparse # python2
+
 import re
 import cgi
 from . import handlers
-from http.server import BaseHTTPRequestHandler, HTTPServer
+
+try:
+	from http.server import BaseHTTPRequestHandler, HTTPServer # python 3
+except:
+	from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer # python 2
+
 
 class QueryBaseHTTPServer(BaseQueryService):
 	def __init__(self, output=None, input=None):
